@@ -51,7 +51,7 @@ To have in-depth understanding of DASK Kubernetes Concepts refer [DASK Kubernete
 
 
 ## Application Stack 
-  Below table covers Application Stack for implementing the Architecture:
+  Below table covers Application Stack for implementing the Clustered Backend for AER Simulator:
 
 Operating System Platform| Programming Language| Quantum Compluting Development Platform | Container Platform | Distributed / HPC Platform| Coding Environment | Cloud Platform (Optional) 
 ------------ | -------------| -------------| -------------| -------------|-------------|-------------|
