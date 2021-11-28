@@ -59,8 +59,8 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
  
  ## Step by Step Guide for Setup of Clustered Backend Environment for AER Simulator
  1. Install a compatible Linux host (Preferably based on Debian and Red Hat), with at least 2 CPU and 4 GB RAM.
- 2. Setup a Kubernetes Cluster Environment (with at least one Kubernetes Master & Two (Worker) Nodes):
-    - On Premise, Learning (**Using Minikube : Single Node variant of K8s**) or Production Environment by referring [Kubernetes Setup Documentation](https://kubernetes.io/docs/setup/) 
+ 2. Setup a Kubernetes Cluster Environment :
+    - On Premise, Learning (**Using Minikube : Single Node variant of K8s**) or Production (with at least one Kubernetes Master & Two (Worker) Nodes) Environment by referring [Kubernetes Setup Documentation](https://kubernetes.io/docs/setup/) 
     - On Cloud Platform ([like on AWS](https://zero-to-jupyterhub.readthedocs.io/en/latest/kubernetes/amazon/step-zero-aws.html)) 
  3. On Kubetnetes Master Node 
  4.    
