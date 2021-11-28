@@ -21,10 +21,41 @@ In order  to simulate parallel execution  on premise as well as cloud  environme
                                                                              
  ![GitHub Dark](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Architecture%20of%20Clustered%20Backend%20for%20Aer%20Simulator.png#gh-light-mode-only)
  
- # Application Stack 
-  Below table covers Application Stack for implementing this project:
+## Architecture Components Overview
+### Kubernetes
+
+Kubernetes is an open-source platform for deploying and managing containers. It provides a container runtime, container orchestration, container-centric infrastructure orchestration, self-healing mechanisms, service discovery and load balancing. It’s used for the deployment, scaling, management, and composition of application containers across clusters of hosts. 
+
+![Kubernetes Components](https://d33wubrfki0l68.cloudfront.net/2475489eaf20163ec0f54ddc1d92aa8d4c87c96b/e7c81/images/docs/components-of-kubernetes.svg) 
+
+To have in-depth understanding of Kubernetes Concepts refer [Kubernetes Official Documentation](https://kubernetes.io/docs/home/)
+
+### DASK
+
+- Is Distributed compute scheduler built to scale  Python. Adapts to custom algorithms with a flexible task scheduler\
+  Parallelizes libraries like NumPy, Pandas, and Scikit-Learn.\
+- Scales workloads from laptops to  supercomputer clusters \
+- Is Extremely modular: disjoint scheduling,  compute, data transfer and out-of-core  handling\
+- Parallelizes libraries like NumPy, Pandas, and Scikit-Learn
+
+To have in-depth understanding of DASK Concepts refer [DASK Documentation](https://docs.dask.org/en/stable/)
+
+### DASK Kubernetes
+Dask Kubernetes Module provides cluster managers for Kubernetes.
+
+**KubeCluster** Module deploys Dask clusters on Kubernetes clusters using native Kubernetes APIs. It is designed to dynamically launch ad-hoc deployments.
+
+To have in-depth understanding of DASK Kubernetes Concepts refer [DASK Kubernetes Documentation](https://kubernetes.dask.org/en/latest/kubecluster.html)
+
+
+## Application Stack 
+  Below table covers Application Stack for implementing the Architecture:
 
 Operating System Platform| Programming Language| Quantum Compluting Development Platform | Container Platform | HPC Platform| Coding Documentation | Cloud Platform (Optional) 
 ------------ | -------------| -------------| -------------| -------------|-------------|-------------|
  Ubuntu Instance with **4vCPU and 16GB RAM** ![Ubuntu](https://thumbor.forbes.com/thumbor/fit-in/1200x0/filters%3Aformat%28jpg%29/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F5ec418c2ac01e2000762cfdd%2F0x0.jpg )| Python >= Version 3.8![Python](https://miro.medium.com/max/1400/0*BjcKs4_BdpYCiybp.png)  |  IBM QASM & AER Simulator  ![Qiskit](https://img.shields.io/badge/Qiskit%200.30-%236929C4.svg?style=for-the-badge&logo=Qiskit&logoColor=white)| Kubernetes >= Version 19.15 ![Kubernetes](https://www.pngitem.com/pimgs/m/3-31510_svg-kubernetes-logo-hd-png-download.png) | Dask-kubernetes >= Version 2021.10.0 ![HPC Cluster Platform](https://user-images.githubusercontent.com/68344826/143777777-1dc83d72-256f-4f60-b329-356167f037a1.png)| ![Jupyter Notebook](https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Jupyter_logo.svg/1200px-Jupyter_logo.svg.png) |![AWS Cloud](https://www.techrepublic.com/a/hub/i/r/2016/08/03/78fd9253-5cce-47e0-8961-77460e957405/thumbnail/770x578/30e06bd910bad09134f56e3ee490f4ef/icon-cloud-aws.png)
+ 
+ ## Step by Step Guide for Implementing Clustered Backend Environment for AER Simulator
+ 
+ 
 
