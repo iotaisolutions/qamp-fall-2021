@@ -69,7 +69,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
     - On Premise Production Environment (**with at least one Kubernetes Master & Two (Worker) Nodes**) Environment by referring [Kubernetes Setup Documentation](https://kubernetes.io/docs/setup/) 
     - On Cloud Platform Production Environment ([like on AWS](https://zero-to-jupyterhub.readthedocs.io/en/latest/kubernetes/amazon/step-zero-aws.html)) 
     - **Snip of a Multinode Kubernetes Cluster Environment** ![Cluster](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Kubernetes%20Cluster%20Snapshot.PNG) 
-3. Ensure latest patch, package , Python on Linux CI host, Kubetnetes Master & (Worker) Nodes, for e.g. running below commands for Ubuntu OS plaform 
+3. Ensure latest patch & package on Linux CI host, Kubetnetes Master & (Worker) Nodes, for e.g. running below commands on Ubuntu 20.04 LTS OS plaform 
     - **$sudo apt update**
     - **$sudo apt -y upgrade** \
    Once the process is complete, check the version of Python 3 that is installed in the system by typing:
