@@ -1,4 +1,4 @@
-## Project 39: Tutorial to use K8S Cluster (Qiskit Advocate Mentorship Program: Fall 2021)
+## Project 39: Tutorial to use K8S Cluster (Qiskit Advocate Mentorship Program: Fall 2021) as backend for Aer Simulator
 
 ## Background
 Simulation of quantum applications like quantum chemistry, materials science, quantum biology, generates quantum systems which are much larger than computational NISQ devices, this gap can be handled by parallelizing the quantum simulation. \
