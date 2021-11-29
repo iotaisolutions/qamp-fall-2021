@@ -51,7 +51,7 @@ To have in-depth understanding of DASK Kubernetes Concepts refer [DASK Kubernete
 
 ## Qiskit Aer Simulator 
 
-Qiskit is an open-source framework for working with noisy quantum computers at the level of pulses, circuits, and algorithms.\
+Qiskit is an open-source framework for working with noisy quantum computers at the level of pulses, circuits, and algorithms.
 
 Qiskit is made up of elements that each work together to enable quantum computing. This element is **Aer**, which provides high-performance quantum computing simulators with realistic noise models.
 
@@ -84,17 +84,21 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
   - (Optionally) Setup a [Virtual Environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/) for Python, which enable you to have an isolated space on your server for Python projects, ensuring that each of your projects can have its own set of dependencies that won’t disrupt any of your other projects. 
 5. **DASK Environment Preperation**
     - Install **DASK Distributed & Kubernetes** Package with Python Dependencies on Linux CI host\
-       **$sudo pip install dask distributed --upgrade** # A distributed task scheduler for Dask
-       **$sudo pip install dask-kubernetes --upgrade**  # DASK Kubernetes Module \
+       **$sudo pip install dask distributed --upgrade** # A distributed task scheduler for Dask\
+       **$sudo pip install dask-kubernetes --upgrade**  # DASK Kubernetes Module 
 
        For other installation options refer [DASK Distributed Documentation](http://distributed.dask.org/en/stable/install.html) & [DASK Kubernetes Documentation](https://kubernetes.dask.org/en/latest/installing.html) 
-    - Install Qiskit SDK package(s) on Linux CI host **preferably in Python Virtual Environment**) 
-      **$sudo pip install qiskit** \
+    - Install Qiskit SDK package(s) on Linux CI host **preferably in Python Virtual Environment**)\ 
+      **$sudo pip install qiskit**\
       Optionally install Application Modules & Visualization functionality (like Plots , Jupyter Notebooks), as per requirement of program, e.g **Qiskit Nature ( for VQE )** \
       **$sudo pip install qiskit[nature]**\
-      **$sudo pip install qiskit[visualization]**\
+      **$sudo pip install qiskit[visualization]**
     - Prepare Dask Worker Pod Specification YAML file for Aer Simulator.  **Note: The specification should include installation of DASK & Qiskit packages**.Refer sample [Worker Spec YAML file](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Sample%20Code/worker-spec.yml).
     - Refer [KubeCluster](https://kubernetes.dask.org/en/latest/kubecluster.html) for other available options for defining DASK Worker/ Pod. 
     - Check Kubernetes Cluster Status ![Cluster Status](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Kubernetes%20Cluster%20Status.PNG)
-6. Run a simple DASK script \ ![DASK Array](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Sample%20DASK%20Test%20Script.PNG) ![Dask array pod](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Sample%20DASK%20Test%20Script%20Spawn.PNG) ![Dask Array Output](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Sample%20DASK%20Test%20Script%20Output.PNG)
+6. **Run a simple DASK script** 
+
+![DASK Array](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Sample%20DASK%20Test%20Script.PNG) 
+![Dask array pod](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Sample%20DASK%20Test%20Script%20Spawn.PNG) 
+![Dask Array Output](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Sample%20DASK%20Test%20Script%20Output.PNG)
  
