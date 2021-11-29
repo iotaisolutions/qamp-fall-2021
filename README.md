@@ -11,8 +11,7 @@ In order  to simulate parallel execution  on premise as well as cloud  environme
 
 ## Solution Overview 
 
-- **Qiskit Aer** contains an option, **"executor"**, to use a custom executor which supports **Threadpool** Executor and DASK client . This option can be scaled up easily and speed up simulation with parallelization. If the user setups DASK cluster with multiple nodes, Aer can execute the simulation in parallel across the multiple nodes like High Performance Computing (HPC) environment. Especially, the simulation time of multiple circuits and a noise simulation can much decrease based on the number of worker nodes because multiple nodes can independently run different simulations.
-- For large scale job parallelization on HPC clusters, Qiskit Aer executors also support the distributed Clients from the **DASK (parallel computing library for Python). DASK         natively scales Python and suitable for applications which require a distributed, auto scaling compute environment that is completely independent of application.**
+- **Qiskit Aer** contains an option, **"executor"**, to use a custom executor which supports **Threadpool** Executor and distributed Clients like **DASK (parallel computing library for Python).** . This option can be scaled up easily and speed up simulation with parallelization. If the user setups DASK cluster with multiple nodes, Aer can execute the simulation in parallel across the multiple nodes like High Performance Computing (HPC) environment. Especially, the simulation time of multiple circuits and a noise simulation can much decrease based on the number of worker nodes because multiple nodes can independently run different simulations.
 - **Using Kubernetes  clusters**, DASK worker environment can be either scaled up manually, or can be scaled as the need arises by creating auto scaling rules in Kubernetes             configuration, which means DASK only need to manage scheduling across workers in Kubernetes Cluster , as work go up or down.
 - The AerSimulator supports multiple simulation methods and configurable options for each simulation method. These may be set using the appropriate kwargs during initialization.     They can also be set of updated using the **set_options()** method. Adds a new option of the backend to provide the user's executor. 
 - When user gives Dask client as executor, Aer can execute a simulation on the distributed machines like HPC clusters. When the executor is set, AerJobSet object is returned         instead of a normal AerJob object. AerJobSet divides multiple experiments in one qobj into each experiment and submits each qobj to the executor as AerJob. After       simulations,AerJobSet collects each result and combines them into one result object.
@@ -38,6 +37,8 @@ To have in-depth understanding of Kubernetes Concepts refer [Kubernetes Official
 - Scales workloads from laptops to  supercomputer clusters 
 - Is Extremely modular: disjoint scheduling,  compute, data transfer and out-of-core  handling
 - Parallelizes libraries like NumPy, Pandas, and Scikit-Learn
+- Suitable for applications which require a distributed, auto scaling compute environment that is completely independent of application.
+
 ![DASK Architecture](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/DASK%20Architecture.PNG)
 To have in-depth understanding of DASK Concepts refer [DASK Documentation](https://docs.dask.org/en/stable/)
 
