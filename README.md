@@ -49,7 +49,7 @@ Dask Kubernetes Module provides cluster managers for Kubernetes.
 
 To have in-depth understanding of DASK Kubernetes Concepts refer [DASK Kubernetes Documentation](https://kubernetes.dask.org/en/latest/kubecluster.html)
 
-## Qiskit Aer Simulator 
+### Qiskit Aer Simulator 
 
 Qiskit is an open-source framework for working with noisy quantum computers at the level of pulses, circuits, and algorithms.
 
