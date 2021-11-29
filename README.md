@@ -80,8 +80,8 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
    - Install Optimized BLAS (linear algebra) library (development files) on Linux CI host, Kubetnetes Master & (Worker) Nodes\
      **$sudo apt-get install libopenblas-dev** 
 4. On Linux CI host, Kubetnetes Master & (Worker) Nodes, to manage software packages for Python, install pip, a tool that will install and manage programming packages:
-  - **$sudo apt install -y python3-pip**
-  - (Optionally) Setup a [Virtual Environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/) for Python, which enable you to have an isolated space on your server for Python projects, ensuring that each of your projects can have its own set of dependencies that won’t disrupt any of your other projects. 
+   - **$sudo apt install -y python3-pip**
+   - (Optionally) Setup a [Virtual Environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/) for Python, which enable you to have an isolated space on your server for Python projects, ensuring that each of your projects can have its own set of dependencies that won’t disrupt any of your other projects. 
 5. **DASK Environment Preperation**
     - Install **DASK Distributed & Kubernetes** Package with Python Dependencies on Linux CI host\
        **$sudo pip install dask distributed --upgrade** # A distributed task scheduler for Dask\
