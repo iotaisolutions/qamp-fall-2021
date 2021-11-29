@@ -97,7 +97,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
     - Prepare Dask Worker Pod Specification YAML file for Aer Simulator.  **Note: The specification should include installation of DASK & Qiskit packages**.Refer sample [Worker Spec YAML file](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Sample%20Code/worker-spec.yml).
     - Refer [KubeCluster](https://kubernetes.dask.org/en/latest/kubecluster.html) for other available options for defining DASK Worker/ Pod. 
     - Check Kubernetes Cluster Status ![Cluster Status](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Kubernetes%20Cluster%20Status.PNG)
-6. **Run a simple DASK script** 
+6. **Run a simple test DASK script** 
 
 ![DASK Array](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Sample%20DASK%20Test%20Script.PNG) 
 ![Dask array pod](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Sample%20DASK%20Test%20Script%20Spawn.PNG) 
