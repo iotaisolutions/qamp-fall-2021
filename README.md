@@ -89,7 +89,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
 
        For other installation options refer [DASK Distributed Documentation](http://distributed.dask.org/en/stable/install.html) & [DASK Kubernetes Documentation](https://kubernetes.dask.org/en/latest/installing.html) 
     - Install Qiskit SDK package(s) 
-      On Linux CI host **preferably in Python Virtual Environment**) \
+      On Linux CI host **preferably in Python Virtual Environment** \
       **$sudo pip install qiskit**\
       Optionally install Application Modules & Visualization functionality (like Plots , Jupyter Notebooks), as per requirement of program, e.g **Qiskit Nature ( for VQE )** \
       **$sudo pip install qiskit[nature]**\
