@@ -39,7 +39,7 @@ To have in-depth understanding of Kubernetes Concepts refer [Kubernetes Official
 - Scales workloads from laptops to  supercomputer clusters 
 - Is Extremely modular: disjoint scheduling,  compute, data transfer and out-of-core  handling
 - Parallelizes libraries like NumPy, Pandas, and Scikit-Learn
-
+![DASK Architecture](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/DASK%20Architecture.PNG)
 To have in-depth understanding of DASK Concepts refer [DASK Documentation](https://docs.dask.org/en/stable/)
 
 ### DASK Kubernetes
