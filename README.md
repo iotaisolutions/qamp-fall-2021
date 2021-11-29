@@ -99,7 +99,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
     - Check Kubernetes Cluster Status ![Cluster Status](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Kubernetes%20Cluster%20Status.PNG)
 6. **Run a simple test DASK script** 
 
-![DASK Array](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Sample%20DASK%20Test%20Script.PNG) 
-![Dask array pod](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Sample%20DASK%20Test%20Script%20Spawn.PNG) 
-![Dask Array Output](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Sample%20DASK%20Test%20Script%20Output.PNG)
+ - ![DASK Array](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Sample%20DASK%20Test%20Script.PNG) 
+ - ![Dask array pod](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Sample%20DASK%20Test%20Script%20Spawn.PNG) 
+ - ![Dask Array Output](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Sample%20DASK%20Test%20Script%20Output.PNG)
  
