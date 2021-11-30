@@ -68,38 +68,136 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
     - On Premise or Cloud, Learning Environment [**Using Minikube : Single Node variant of K8s**](https://minikube.sigs.k8s.io/docs/start) 
     - On Premise Production Environment (**with at least one Kubernetes Master & Two (Worker) Nodes**) Environment by referring [Kubernetes Setup Documentation](https://kubernetes.io/docs/setup/) 
     - On Cloud Platform Production Environment ([like on AWS](https://zero-to-jupyterhub.readthedocs.io/en/latest/kubernetes/amazon/step-zero-aws.html)) 
-    - **Snip of a Multinode Kubernetes Cluster Environment** ![Cluster](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Kubernetes%20Cluster%20Snapshot.PNG) 
+    - **Snip of a Multinode Kubernetes Cluster Environment** 
+     ```bash
+        $ kubectl get nodes –A # One Master & 2 Worker Nodes
+        NAME                            STATUS   ROLES                  AGE     VERSION
+        ip-172-20-33-106.ec2.internal   Ready    node                   2d19h   v1.22.2
+        ip-172-20-51-193.ec2.internal   Ready    node                   2d19h   v1.22.2
+        ip-172-20-61-190.ec2.internal   Ready    control-plane,master   2d19h   v1.22.2
+
+        $ kubectl get pods –A # Pods for Kubernetes Environment
+        NAMESPACE     NAME                                                    READY   STATUS    RESTARTS        AGE
+        kube-system   coredns-5dc785954d-82nf5                                1/1     Running   0               2d19h
+        kube-system   coredns-5dc785954d-r5ksr                                1/1     Running   0               2d19h
+        kube-system   coredns-autoscaler-84d4cfd89c-hzn5k                     1/1     Running   0               2d19h
+        kube-system   dns-controller-c459588c4-rd7rd                          1/1     Running   0               2d19h
+        kube-system   ebs-csi-controller-bf875d89b-r4rcz                      6/6     Running   0               2d19h
+        kube-system   ebs-csi-node-dzvl9                                      3/3     Running   0               2d19h
+        kube-system   ebs-csi-node-smffl                                      3/3     Running   0               2d19h
+        kube-system   ebs-csi-node-spdzr                                      3/3     Running   0               2d19h
+        kube-system   etcd-manager-events-ip-172-20-61-190.ec2.internal       1/1     Running   0               2d19h
+        kube-system   etcd-manager-main-ip-172-20-61-190.ec2.internal         1/1     Running   0               2d19h
+        kube-system   kops-controller-sr5lp                                   1/1     Running   0               2d19h
+        kube-system   kube-apiserver-ip-172-20-61-190.ec2.internal            2/2     Running   1 (2d19h ago)   2d19h
+        kube-system   kube-controller-manager-ip-172-20-61-190.ec2.internal   1/1     Running   3 (2d19h ago)   2d19h
+        kube-system   kube-proxy-ip-172-20-33-106.ec2.internal                1/1     Running   0               2d19h
+        kube-system   kube-proxy-ip-172-20-51-193.ec2.internal                1/1     Running   0               2d19h
+        kube-system   kube-proxy-ip-172-20-61-190.ec2.internal                1/1     Running   0               2d19h
+        kube-system   kube-scheduler-ip-172-20-61-190.ec2.internal            1/1     Running   0               2d19h
+    ```
+
 3. Ensure latest patch & package on Linux CI host, Kubetnetes Master & (Worker) Nodes, for e.g. running below commands on Ubuntu 20.04 LTS OS plaform 
+    ```bash
     - **$sudo apt update**
     - **$sudo apt -y upgrade** \
+    ```
    Once the process is complete, check the version of Python 3 that is installed in the system by typing:
+   ```bash
    - **$python3 -V**\
+   ```
      You’ll receive output in the terminal window that will let you know the version number. While this number may vary, the output will be similar to this:\
-     Output\
-     **Python 3.8.10**
+   ```bash
+     Python 3.8.10*
+   ```
    - Install Optimized BLAS (linear algebra) library (development files) on Linux CI host, Kubetnetes Master & (Worker) Nodes\
      **$sudo apt-get install libopenblas-dev** 
 4. On Linux CI host, Kubetnetes Master & (Worker) Nodes, to manage software packages for Python, install pip, a tool that will install and manage programming packages:
+   ```bash
    - **$sudo apt install -y python3-pip**
+   ```
    - (Optionally) Setup a [Virtual Environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/) for Python, which enable you to have an isolated space on your server for Python projects, ensuring that each of your projects can have its own set of dependencies that won’t disrupt any of your other projects. 
 5. **DASK Environment Preperation**
     - Install **DASK Distributed & Kubernetes** Package with Python Dependencies on Linux CI host\
+       ```bash
        **$sudo pip install dask distributed --upgrade** # A distributed task scheduler for Dask\
        **$sudo pip install dask-kubernetes --upgrade**  # DASK Kubernetes Module 
-
+       ```
        For other installation options refer [DASK Distributed Documentation](http://distributed.dask.org/en/stable/install.html) & [DASK Kubernetes Documentation](https://kubernetes.dask.org/en/latest/installing.html) 
     - Install Qiskit SDK package(s) 
       On Linux CI host **preferably in Python Virtual Environment** \
+      ```bash
       **$sudo pip install qiskit**\
+      ```
       Optionally install Application Modules & Visualization functionality (like Plots , Jupyter Notebooks), as per requirement of program, e.g **Qiskit Nature ( for VQE )** \
+      ```bash
       **$sudo pip install qiskit[nature]**\
       **$sudo pip install qiskit[visualization]**
+      ```
     - Prepare Dask Worker Pod Specification YAML file for Aer Simulator.  **Note: The specification should include installation of DASK & Qiskit packages**.Refer sample [Worker Spec YAML file](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Sample%20Code/worker-spec.yml).
     - Refer [KubeCluster](https://kubernetes.dask.org/en/latest/kubecluster.html) for other available options for defining DASK Worker/ Pod. 
-    - Check Kubernetes Cluster Status ![Cluster Status](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Kubernetes%20Cluster%20Status.PNG)
+    - Check Kubernetes Cluster Status:
+    ```bash
+         ubuntu@ip-172-31-93-214:~$ kubectl get nodes
+         NAME                            STATUS   ROLES                  AGE   VERSION
+         ip-172-20-33-106.ec2.internal   Ready    node                   24d   v1.22.2
+         ip-172-20-51-193.ec2.internal   Ready    node                   24d   v1.22.2
+         ip-172-20-61-190.ec2.internal   Ready    control-plane,master   24d   v1.22.2
+    ```  
+   
 6. **Run a simple test DASK script** 
 
- - ![DASK Array](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Sample%20DASK%20Test%20Script.PNG) 
- - ![Dask array pod](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Sample%20DASK%20Test%20Script%20Spawn.PNG) 
- - ![Dask Array Output](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Sample%20DASK%20Test%20Script%20Output.PNG)
+   ```bash
+      #Python Script for Dask Array Mean Calculation
+
+      from dask_kubernetes import KubeCluster
+      from dask.distributed import Client
+      cluster = KubeCluster('worker-spec.yml')
+
+      cluster.scale(3)  # specify number of DASK workers explicitly
+      cluster.adapt(minimum=1, maximum=10)  # or dynamically scale based on current workload
+
+      # Connect Dask to the cluster
+      client = Client(cluster)
+
+
+      import time
+      time.sleep(60)
+      # Example usage
+      import dask.array as da
+
+
+      # Create a large array and calculate the mean
+      array = da.ones((1000, 1000, 1000))
+      print("Ärray Mean", array.mean().compute())# Should print 1.0
+      ```
+      
+      **#During Script execution Dask Worker Pod(s) are automatically spawned on Kubernetes Nodes as per load**
+      ```bash
+      $ kubectl get pods -A|grep -i dask
+      default       dask-ubuntu-c3d47733-3xx6k8  1/1     Running   0  18s
+      ```
+      #Script Output
+      ```bash
+      Creating scheduler pod on cluster. This may take some time.
+      distributed.deploy.adaptive - INFO - Adaptive scaling started: minimum=1 maximum=10
+      distributed.deploy.adaptive - INFO - Retiring workers [0, 1]
+      /usr/local/lib/python3.8/dist-packages/distributed/client.py:1128: Version MismatchWarning: Mismatched versions found
+
+      +-------------+------------------------+-----------+---------+
+      | Package     | client                 | scheduler | workers |
+      +-------------+------------------------+-----------+---------+
+      | blosc       | None                   | 1.10.2    | None    |
+      | dask        | 2021.09.1              | 2021.10.0 | None    |
+      | distributed | 2021.09.1+43.g842cc758 | 2021.10.0 | None    |
+      | lz4         | None                   | 3.1.3     | None    |
+      +-------------+------------------------+-----------+---------+
+        warnings.warn(version_module.VersionMismatchWarning(msg[0]["warning"]))
+      Ärray Mean 1.0
+      distributed.deploy.adaptive_core - INFO - Adaptive stop
+      distributed.deploy.adaptive_core - INFO - Adaptive stop
+      ```
+
+
+
  
