@@ -99,40 +99,42 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
 
 3. Ensure latest patch & package on Linux CI host, Kubetnetes Master & (Worker) Nodes, for e.g. running below commands on Ubuntu 20.04 LTS OS plaform 
     ```bash
-    - **$sudo apt update**
-    - **$sudo apt -y upgrade** \
+    - $sudo apt update
+    - $sudo apt -y upgrade
     ```
    Once the process is complete, check the version of Python 3 that is installed in the system by typing:
    ```bash
-   - **$python3 -V**\
+   - $python3 -V
    ```
      You’ll receive output in the terminal window that will let you know the version number. While this number may vary, the output will be similar to this:\
    ```bash
      Python 3.8.10*
    ```
    - Install Optimized BLAS (linear algebra) library (development files) on Linux CI host, Kubetnetes Master & (Worker) Nodes\
-     **$sudo apt-get install libopenblas-dev** 
+   ```bash
+     $sudo apt-get install libopenblas-dev
+    ```
 4. On Linux CI host, Kubetnetes Master & (Worker) Nodes, to manage software packages for Python, install pip, a tool that will install and manage programming packages:
    ```bash
-   - **$sudo apt install -y python3-pip**
+   - $sudo apt install -y python3-pip
    ```
    - (Optionally) Setup a [Virtual Environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/) for Python, which enable you to have an isolated space on your server for Python projects, ensuring that each of your projects can have its own set of dependencies that won’t disrupt any of your other projects. 
 5. **DASK Environment Preperation**
     - Install **DASK Distributed & Kubernetes** Package with Python Dependencies on Linux CI host\
        ```bash
-       **$sudo pip install dask distributed --upgrade** # A distributed task scheduler for Dask\
-       **$sudo pip install dask-kubernetes --upgrade**  # DASK Kubernetes Module 
+       $sudo pip install dask distributed --upgrade # A distributed task scheduler for Dask
+       $sudo pip install dask-kubernetes --upgrade  # DASK Kubernetes Module 
        ```
        For other installation options refer [DASK Distributed Documentation](http://distributed.dask.org/en/stable/install.html) & [DASK Kubernetes Documentation](https://kubernetes.dask.org/en/latest/installing.html) 
     - Install Qiskit SDK package(s) 
       On Linux CI host **preferably in Python Virtual Environment** \
       ```bash
-      **$sudo pip install qiskit**\
+      $sudo pip install qiskit
       ```
       Optionally install Application Modules & Visualization functionality (like Plots , Jupyter Notebooks), as per requirement of program, e.g **Qiskit Nature ( for VQE )** \
       ```bash
-      **$sudo pip install qiskit[nature]**\
-      **$sudo pip install qiskit[visualization]**
+      $sudo pip install qiskit[nature]
+      $sudo pip install qiskit[visualization]
       ```
     - Prepare Dask Worker Pod Specification YAML file for Aer Simulator.  **Note: The specification should include installation of DASK & Qiskit packages**.Refer sample [Worker Spec YAML file](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Sample%20Code/worker-spec.yml).
     - Refer [KubeCluster](https://kubernetes.dask.org/en/latest/kubecluster.html) for other available options for defining DASK Worker/ Pod. 
