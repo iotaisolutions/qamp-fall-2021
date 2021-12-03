@@ -67,7 +67,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
 2. Setup a Kubernetes Cluster Environment (with latest patch & package level):
     - On Premise or Cloud, Learning Environment [**Using Minikube : Single Node variant of K8s**](https://minikube.sigs.k8s.io/docs/start) 
     - On Premise Production Environment (**with at least one Kubernetes Master & Two (Worker) Nodes**) Environment by referring [Kubernetes Setup Documentation](https://kubernetes.io/docs/setup/) 
-    - On Cloud Platform Production Environment ([like on AWS](https://zero-to-jupyterhub.readthedocs.io/en/latest/kubernetes/setup-kubernetes.html)) 
+    - On Cloud Platform Production Environment ([Setup Kubernetes](https://zero-to-jupyterhub.readthedocs.io/en/latest/kubernetes/setup-kubernetes.html)) 
     - **Snip of a Multinode Kubernetes Cluster Environment** 
      ```bash
         $ kubectl get nodes –A # One Master & 2 Worker Nodes
