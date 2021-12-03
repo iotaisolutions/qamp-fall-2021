@@ -106,11 +106,11 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
    ```bash
    - $python3 -V
    ```
-     You’ll receive output in the terminal window that will let you know the version number. While this number may vary, the output will be similar to this:\
+     You’ll receive output in the terminal window that will let you know the version number. While this number may vary, the output will be similar to this:
    ```bash
      Python 3.8.10*
    ```
-   - Install Optimized BLAS (linear algebra) library (development files) on Linux CI host, Kubetnetes Master & (Worker) Nodes\
+   - Install Optimized BLAS (linear algebra) library (development files) on Linux CI host, Kubetnetes Master & (Worker) Nodes
    ```bash
      $sudo apt-get install libopenblas-dev
     ```
@@ -120,18 +120,18 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
    ```
    - (Optionally) Setup a [Virtual Environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/) for Python, which enable you to have an isolated space on your server for Python projects, ensuring that each of your projects can have its own set of dependencies that won’t disrupt any of your other projects. 
 5. **DASK Environment Preperation**
-    - Install **DASK Distributed & Kubernetes** Package with Python Dependencies on Linux CI host\
+    - Install **DASK Distributed & Kubernetes** Package with Python Dependencies on Linux CI host
        ```bash
        $sudo pip install dask distributed --upgrade # A distributed task scheduler for Dask
        $sudo pip install dask-kubernetes --upgrade  # DASK Kubernetes Module 
        ```
        For other installation options refer [DASK Distributed Documentation](http://distributed.dask.org/en/stable/install.html) & [DASK Kubernetes Documentation](https://kubernetes.dask.org/en/latest/installing.html) 
     - Install Qiskit SDK package(s) 
-      On Linux CI host **preferably in Python Virtual Environment** \
+      On Linux CI host **preferably in Python Virtual Environment** 
       ```bash
       $sudo pip install qiskit
       ```
-      Optionally install Application Modules & Visualization functionality (like Plots , Jupyter Notebooks), as per requirement of program, e.g **Qiskit Nature ( for VQE )** \
+      Optionally install Application Modules & Visualization functionality (like Plots , Jupyter Notebooks), as per requirement of program, e.g **Qiskit Nature ( for VQE )**
       ```bash
       $sudo pip install qiskit[nature]
       $sudo pip install qiskit[visualization]
