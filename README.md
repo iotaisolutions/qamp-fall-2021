@@ -323,7 +323,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       my-dask-scheduler           LoadBalancer   100.66.41.63     xxx4e66d7fxxx47858xx1c1cd4c13c19-1533367445.us-east-1.elb.amazonaws.com   8786:31305/TCP,8787:31970/TCP   4m19s
 
       ```
-    When we ran kubectl get services, some externally IP is visible (like **xxx4e66d7fxxx47858xx1c1cd4c13c19-1533367445.us-east-1.elb.amazonaws.com**) against dask scheduler services, using any web browser (http://xxx4e66d7fxxx47858xx1c1cd4c13c19-1533367445.us-east-1.elb.amazonaws.com:8787/workers) the Dask diagnostic dashboard can be accessed. 
+    When we ran kubectl get services, some external IP is visible (like **xxx4e66d7fxxx47858xx1c1cd4c13c19-1533367445.us-east-1.elb.amazonaws.com**) against dask scheduler services, using any web browser (http://xxx4e66d7fxxx47858xx1c1cd4c13c19-1533367445.us-east-1.elb.amazonaws.com:8787/workers) the Dask diagnostic dashboard can be accessed. 
     ![DASK Dashboard](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/DASK%20Dashboard.png)
     
       
