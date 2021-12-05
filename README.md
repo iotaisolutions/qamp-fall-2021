@@ -199,7 +199,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
   - Get the Kubernetes Specification for workers related to deployment 
      ```bash
       $helm get all my-dask
-      ##Output (Not full des
+      ##Output (Just the worker specification, not the complete description)
       # Source: dask/templates/dask-worker-deployment.yaml
       apiVersion: apps/v1
       kind: Deployment
@@ -225,8 +225,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
     ```bash
     kubectl autoscale deployment.v1.apps/my-dask-worker --min=1 --max=3 --cpu-percent=80
     ```
-    
-# Read more about the installation in the Metrics Server packaged by Bitnami Chart Github repository
+    Read more about the installation in the Metrics Server packaged by Bitnami Chart Github repository
   
  ### DASK Environment Preperation
   - Install **DASK Distributed & Kubernetes** Package with Python Dependencies on Linux CI host
@@ -555,26 +554,26 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       ```bash
       === GROUND STATE ENERGY ===
 
-* Electronic ground state energy (Hartree): -8.458691732867
-  - computed part:      -8.458691732867
-~ Nuclear repulsion energy (Hartree): 0.635012653104
-> Total ground state energy (Hartree): -7.823679079763
+      * Electronic ground state energy (Hartree): -8.458691732867
+        - computed part:      -8.458691732867
+      ~ Nuclear repulsion energy (Hartree): 0.635012653104
+      > Total ground state energy (Hartree): -7.823679079763
 
-=== MEASURED OBSERVABLES ===
+      === MEASURED OBSERVABLES ===
 
-  0:  # Particles: 4.000 S: 0.000 S^2: 0.000 M: 0.000
+        0:  # Particles: 4.000 S: 0.000 S^2: 0.000 M: 0.000
 
-=== DIPOLE MOMENTS ===
+      === DIPOLE MOMENTS ===
 
-~ Nuclear dipole moment (a.u.): [0.0  0.0  14.17294593]
+      ~ Nuclear dipole moment (a.u.): [0.0  0.0  14.17294593]
 
-  0:
-  * Electronic dipole moment (a.u.): [-0.00000109  0.00000622  12.73426887]
-    - computed part:      [-0.00000109  0.00000622  12.73426887]
-  > Dipole moment (a.u.): [0.00000109  -0.00000622  1.43867706]  Total: 1.43867706
-                 (debye): [0.00000277  -0.00001581  3.656752]  Total: 3.656752
+        0:
+        * Electronic dipole moment (a.u.): [-0.00000109  0.00000622  12.73426887]
+          - computed part:      [-0.00000109  0.00000622  12.73426887]
+        > Dipole moment (a.u.): [0.00000109  -0.00000622  1.43867706]  Total: 1.43867706
+                       (debye): [0.00000277  -0.00001581  3.656752]  Total: 3.656752
 
-Execution Time with ThreadPool Parallelism across 2 workers:  751.1724326850017
+      Execution Time with ThreadPool Parallelism across 2 workers:  751.1724326850017
 
       ```
     - **Case 3 : Running script with DASK K8s parallel execution environment on Cloud Platform**    
