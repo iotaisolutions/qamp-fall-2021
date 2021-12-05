@@ -119,10 +119,21 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
  ## Step by Step Guide for Setup of Clustered Backend Environment for AER Simulator
  ###Setup Kubernetes Environment
   - Install a compatible Linux CI host (Preferably based on Debian and Red Hat), with at least 2 CPU and 4 GB RAM.
+  - SSH to Linux CI host
+  - Choose a cluster name:
+    Consider there is no pre-configured DNS and use the suffix like “.k8s.local”. Per the docs, if the DNS name ends in .k8s.local the cluster will use internal hosted DNS.
+     ```bash
+        export NAME=<somename>.k8s.local
+     ```
+  - Setup an ssh keypair to use with the cluster:
+     ```bash
+        ssh-keygen
+     ```
   - Deploy a Kubernetes Cluster Environment (with latest patch & package level):
     - On Premise or Cloud, Learning Environment [**Using Minikube : Single Node variant of K8s**](https://minikube.sigs.k8s.io/docs/start) 
     - On Premise Production Environment (**with at least one Kubernetes Master & Two (Worker) Nodes**) Environment by referring [Kubernetes Setup Documentation](https://kubernetes.io/docs/setup/) 
     - On Cloud Platform Production Environment ([Setup Kubernetes](https://zero-to-jupyterhub.readthedocs.io/en/latest/kubernetes/setup-kubernetes.html)) 
+    
     - **Snip of a Multinode Kubernetes Cluster Environment** 
      ```bash
         $ kubectl get nodes –A # One Master & 2 Worker Nodes
@@ -153,29 +164,30 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
     ```
 
   - Ensure latest patch & package on Linux CI host, Kubetnetes Master & (Worker) Nodes, for e.g. running below commands on Ubuntu 20.04 LTS OS plaform 
-    ```bash
-    - $sudo apt update
-    - $sudo apt -y upgrade
-    ```
+      ```bash
+      $sudo apt update
+      $sudo apt -y upgrade
+      ```
     Once the process is complete, check the version of Python 3 that is installed in the system by typing:
-     ```bash
-       $python3 -V
-     ```
+      ```bash
+      $python3 -V
+      ```
     You’ll receive output in the terminal window that will let you know the version number. While this number may vary, the output will be similar to this:
-     ```bash
-     Python 3.8.10*
-     ```
+      ```bash
+      Python 3.8.10*
+      ```
   - Install Optimized BLAS (linear algebra) library (development files) on Linux CI host, Kubetnetes Master & (Worker) Nodes
-     ```bash
-     $sudo apt-get install libopenblas-dev
-     ```
+      ```bash
+      $sudo apt-get install libopenblas-dev
+      ```
   - On Linux CI host, Kubetnetes Master & (Worker) Nodes, to manage software packages for Python, install pip, a tool that will install and manage programming packages:
-       ```bash
-       $sudo apt install -y python3-pip
-       ```
+      ```bash
+      $sudo apt install -y python3-pip
+      ```
   - (Optionally) Setup a [Virtual Environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/) for Python, which enable you to have an isolated space on your server for Python projects, ensuring that each of your projects can have its own set of dependencies that won’t disrupt any of your other projects. 
   - Install **Helm** on Linux CI Host using [Helm Install Documentation](https://helm.sh/docs/intro/install)
-5. **DASK Environment Preperation**
+  
+ ###DASK Environment Preperation
     - Install **DASK Distributed & Kubernetes** Package with Python Dependencies on Linux CI host
        ```bash
        $sudo pip install dask distributed --upgrade # A distributed task scheduler for Dask
@@ -192,31 +204,119 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       $sudo pip install qiskit[nature]
       $sudo pip install qiskit[visualization]
       ```
-    - Install the DASK  Dask Worker Pod Specification YAML file for Aer Simulator.  **Note: The specification should include installation of DASK & Qiskit packages**.Refer sample [Worker Spec YAML file](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Sample%20Code/worker-spec.yml).
-    - Refer [KubeCluster](https://kubernetes.dask.org/en/latest/kubecluster.html) for other available options for defining DASK Worker/ Pod. 
+    - Dask maintains a Helm chart repository containing various charts for the Dask community https://helm.dask.org/ . Add this to your known channels and update your local charts:
+      ```bash
+      helm repo add dask https://helm.dask.org/
+      helm repo update
+      ```
     - Check Kubernetes Cluster Status:
-    ```bash
-         ubuntu@ip-172-31-93-214:~$ kubectl get nodes
-         NAME                            STATUS   ROLES                  AGE   VERSION
-         ip-172-20-33-106.ec2.internal   Ready    node                   24d   v1.22.2
-         ip-172-20-51-193.ec2.internal   Ready    node                   24d   v1.22.2
-         ip-172-20-61-190.ec2.internal   Ready    control-plane,master   24d   v1.22.2
-    ```  
-   
-6. **Run a simple test DASK script** 
+      ```bash
+      ubuntu@ip-172-31-93-214:~$ kubectl get nodes
+      NAME                            STATUS   ROLES                  AGE   VERSION
+      ip-172-20-33-106.ec2.internal   Ready    node                   24d   v1.22.2
+      ip-172-20-51-193.ec2.internal   Ready    node                   24d   v1.22.2
+      ip-172-20-61-190.ec2.internal   Ready    control-plane,master   24d   v1.22.2
+      ```  
+     
+    - Once your Kubernetes cluster is ready, deploy **Single-user** dask deployment using the Dask Helm chart, which has one notebook server and one Dask Cluster:
+      ```bash
+      helm install my-dask dask/dask # Replace helm release name as per your environment
+      ```
+      This deploys a dask-scheduler, several (=3) dask-worker processes, and also an optional Jupyter server.
+     - **Verify Deployment** : It might take a minute to deploy, one or more pods will be visible in either a state like Init or Running. Check deplyment its status with kubectl:
+      ```bash
+      ubuntu@ip-172-31-93-214:~$ kubectl get pods |grep dask
+      my-dask-jupyter-54ddbfdd9d-psrlh             1/1     Running   0          2m23s
+      my-dask-scheduler-7f4f94bb7d-vd5sb           1/1     Running   0          2m23s
+      my-dask-worker-6877d8f79f-2kxkk              1/1     Running   0          2m23s
+      my-dask-worker-6877d8f79f-94bhs              1/1     Running   0          2m23s
+      my-dask-worker-6877d8f79f-rj7mp              1/1     Running   0          2m23s
+      my-dask-worker-6877d8f79f-zl54c              1/1     Running   0          116s
 
-   ```bash
+
+      ubuntu@ip-172-31-93-214:~$ kubectl get services|grep dask
+      dask-ubuntu-1e61eab2-a      ClusterIP   100.68.40.175    <none>        8786/TCP,8787/TCP   28d
+      dask-ubuntu-86f19230-5      ClusterIP   100.68.54.85     <none>        8786/TCP,8787/TCP   45h
+      dask-ubuntu-b71bdf3d-9      ClusterIP   100.69.173.29    <none>        8786/TCP,8787/TCP   45h
+      dask-ubuntu-dbe05783-a      ClusterIP   100.71.121.134   <none>        8786/TCP,8787/TCP   45h
+      my-dask-jupyter             ClusterIP   100.70.215.20    <none>        80/TCP              3m17s
+      my-dask-scheduler           ClusterIP   100.71.64.151    <none>        8786/TCP,80/TCP     3m17s
+      
+      ubuntu@ip-172-31-93-214:~$ kubectl get deployments|grep dask
+      my-dask-jupyter             1/1     1            1           12m
+      my-dask-scheduler           1/1     1            1           12m
+      my-dask-worker              3/3     3            3           12m
+      ```
+    - (Optional) Kubernetes cluster has default **serviceType** already set as **ClusterIP**
+
+      If Kubernetes cluster on an in house **server/minikube** change serviceType to **NodePort**
+      ```bash 
+      kubectl delete services my-dask-scheduler # Delete the service entry for dask scheduler
+      ubuntu@ip-172-31-93-214:~$ kubectl expose deployment my-dask-scheduler --type=NodePort  --name=my-dask-scheduler
+      service/my-dask-scheduler exposed
+      ```
+     If Kubernetes Environment is on **Cloud platform**, change serviceType  **LoadBalancer**
+      ```bash
+      kubectl delete services my-dask-scheduler # Delete the service entry for dask scheduler
+      ubuntu@ip-172-31-93-214:~$ kubectl expose deployment my-dask-scheduler --type=LoadBalancer  --name=my-dask-scheduler
+      ###Wait for few minutes (depending on response from backend Cloud platform) and again check the kubernetes services status
+      ubuntu@ip-172-31-93-214:~$ kubectl get services|grep dask
+      dask-ubuntu-1e61eab2-a      ClusterIP      100.68.40.175    <none>                                                                    8786/TCP,8787/TCP               28d
+      dask-ubuntu-86f19230-5      ClusterIP      100.68.54.85     <none>                                                                    8786/TCP,8787/TCP               46h
+      dask-ubuntu-b71bdf3d-9      ClusterIP      100.69.173.29    <none>                                                                    8786/TCP,8787/TCP               45h
+      dask-ubuntu-dbe05783-a      ClusterIP      100.71.121.134   <none>                                                                    8786/TCP,8787/TCP               45h
+      my-dask-jupyter             ClusterIP      100.70.215.20    <none>                                                                    80/TCP                          21m
+      my-dask-scheduler           LoadBalancer   100.66.41.63     xxx4e66d7fxxx47858xx1c1cd4c13c19-1533367445.us-east-1.elb.amazonaws.com   8786:31305/TCP,8787:31970/TCP   4m19s
+
+      ```
+      When we ran kubectl get services, some externally IP is visible (like **xxx4e66d7fxxx47858xx1c1cd4c13c19-1533367445.us-east-1.elb.amazonaws.com**) against dask scheduler services, using any web browser (http://xxx4e66d7fxxx47858xx1c1cd4c13c19-1533367445.us-east-1.elb.amazonaws.com:8787/workers) the Dask diagnostic dashboard can be accessed. 
+      
+    - **Configure DASK Environment as Executor for Qiskit AER Simulator** : By default, the Helm deployment launches three workers using one core each and a standard conda environment. To act as a **executor** for Qiskit AER simulator, need to create a small yaml file that customizes environment by:
+     - Setting variables on worker nodes: **OMP_NUM_THREAD, MKL_NUM_THREADS, OPENBLAS_NUM_THREADS**  
+       **Note:** These environment variable controls the number of threads that many libraries, including the BLAS library powering numpy.dot, use in their computations, like matrix multiply.The conflict here is that two parallel libraries that are calling each other, BLAS, and dask.distributed. Each library is designed to use as many threads as there are logical cores available in the system. 
+
+       For example if compute platform had eight cores then dask.distributed might run function **f** eight times at once on different threads. The **numpy.dot** function call within **f** would use eight threads per call, resulting in 64 threads running at once.This is actually fine, but it will be slower than scenario if where just eight threads are used at a time, either by limiting dask.distributed or by limiting BLAS.
+
+
+     - Installing **qiskit** package on worker pods.
+
+      ```bash
+      # config.yaml
+
+      worker:
+        env:
+          - name: EXTRA_PIP_PACKAGES
+            value: qiskit
+          - name: OMP_NUM_THREAD
+            value: "1"
+          - name: MKL_NUM_THREADS
+            value: "1"
+          - name: OPENBLAS_NUM_THREADS
+            value: "1"
+
+      # We want to keep the same packages on the worker and jupyter environments
+      jupyter:
+        env:
+          - name: EXTRA_PIP_PACKAGES
+            value: qiskit
+          - name: OMP_NUM_THREAD
+            value: "1"
+          - name: MKL_NUM_THREADS
+            value: "1"
+          - name: OPENBLAS_NUM_THREADS
+            value: "1"
+      ```
+
+###Testing the environment 
+- Running a simple DASK (non QISKIT) script** 
+
+      ```bash
       #Python Script for Dask Array Mean Calculation
 
-      from dask_kubernetes import KubeCluster
       from dask.distributed import Client
-      cluster = KubeCluster('worker-spec.yml')
-
-      cluster.scale(3)  # specify number of DASK workers explicitly
-      cluster.adapt(minimum=1, maximum=10)  # or dynamically scale based on current workload
 
       # Connect Dask to the cluster
-      client = Client(cluster)
+      client = Client("tcp://a9164e66d7f6a47858ab1c1cd4c13c19-1533367445.us-east-1.elb.amazonaws.com:8786")
 
 
       import time
@@ -227,35 +327,23 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
 
       # Create a large array and calculate the mean
       array = da.ones((1000, 1000, 1000))
-      print("Ärray Mean", array.mean().compute())# Should print 1.0
-      ```
+      print("Array Mean", array.mean().compute())# Should print 1.0
+
       
-      **#During Script execution Dask Worker Pod(s) are automatically spawned on Kubernetes Nodes as per load**
-      ```bash
-      $ kubectl get pods -A|grep -i dask
-      default       dask-ubuntu-c3d47733-3xx6k8  1/1     Running   0  18s
-      ```
-      #Script Output
-      ```bash
-      Creating scheduler pod on cluster. This may take some time.
-      distributed.deploy.adaptive - INFO - Adaptive scaling started: minimum=1 maximum=10
-      distributed.deploy.adaptive - INFO - Retiring workers [0, 1]
-      /usr/local/lib/python3.8/dist-packages/distributed/client.py:1128: Version MismatchWarning: Mismatched versions found
+      ubuntu@ip-172-31-93-214:~$ python3 dask_array_mean.py
+      /home/ubuntu/.local/lib/python3.8/site-packages/distributed/client.py:1131: VersionMismatchWarning: Mismatched versions found
 
-      +-------------+------------------------+-----------+---------+
-      | Package     | client                 | scheduler | workers |
-      +-------------+------------------------+-----------+---------+
-      | blosc       | None                   | 1.10.2    | None    |
-      | dask        | 2021.09.1              | 2021.10.0 | None    |
-      | distributed | 2021.09.1+43.g842cc758 | 2021.10.0 | None    |
-      | lz4         | None                   | 3.1.3     | None    |
-      +-------------+------------------------+-----------+---------+
+      +---------+----------------+----------------+----------------+
+      | Package | client         | scheduler      | workers        |
+      +---------+----------------+----------------+----------------+
+      | blosc   | None           | 1.10.2         | 1.10.2         |
+      | lz4     | None           | 3.1.3          | 3.1.3          |
+      | numpy   | 1.21.2         | 1.21.1         | 1.21.1         |
+      | pandas  | 1.3.3          | 1.3.0          | 1.3.0          |
+      | python  | 3.8.10.final.0 | 3.8.12.final.0 | 3.8.12.final.0 |
+      | toolz   | 0.11.1         | 0.11.2         | 0.11.2         |
+      +---------+----------------+----------------+----------------+
         warnings.warn(version_module.VersionMismatchWarning(msg[0]["warning"]))
-      Ärray Mean 1.0
-      distributed.deploy.adaptive_core - INFO - Adaptive stop
-      distributed.deploy.adaptive_core - INFO - Adaptive stop
+      Array Mean 1.0
+  
       ```
-
-
-
- 
