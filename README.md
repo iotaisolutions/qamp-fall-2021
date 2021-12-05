@@ -21,7 +21,7 @@ In order  to simulate parallel execution  on premise as well as cloud  environme
                                                                              
  ![GitHub Dark](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/Architecture%20of%20Clustered%20Backend%20for%20Aer%20Simulator.png#gh-light-mode-only)
  
-## Solution Components Overview
+## Solution Components
 ### Kubernetes
 
 Kubernetes is an open-source platform for deploying and managing containers. It provides a container runtime, container orchestration, container-centric infrastructure orchestration, self-healing mechanisms, service discovery and load balancing. It’s used for the deployment, scaling, management, and composition of application containers across clusters of hosts. 
