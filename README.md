@@ -316,6 +316,8 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
 
       ```
     When we ran kubectl get services, some externally IP is visible (like **xxx4e66d7fxxx47858xx1c1cd4c13c19-1533367445.us-east-1.elb.amazonaws.com**) against dask scheduler services, using any web browser (http://xxx4e66d7fxxx47858xx1c1cd4c13c19-1533367445.us-east-1.elb.amazonaws.com:8787/workers) the Dask diagnostic dashboard can be accessed. 
+    ![DASK Dashboard](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/DASK%20Dashboard.png)
+    
       
   - **Configure DASK Environment as Executor for Qiskit AER Simulator** : By default, the Helm deployment launches three workers using one core each and a standard conda environment. To act as a **executor** for Qiskit AER simulator, need to create a small yaml file that customizes environment by:
     - Setting variables on worker nodes: **OMP_NUM_THREAD, MKL_NUM_THREADS, OPENBLAS_NUM_THREADS**  
@@ -352,7 +354,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
           - name: OPENBLAS_NUM_THREADS
             value: "1"
       ```
-  - **Update deployment** : If this config file has the configuration for the number and size of workers then it overrides existing configuration and installs the conda and pip packages on the worker and Jupyter containers. In general, it is needed that these two container environments match.\
+  - **Update deployment** : If this config file has the configuration for the number and size of workers then it overrides existing configuration and installs the conda and pip packages on the worker and Jupyter containers. In general, it is needed that these two container environments match.
 
     Update deployment to use this configuration file (config.yaml):
       ```bash
