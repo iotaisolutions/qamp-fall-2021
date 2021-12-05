@@ -30,6 +30,11 @@ Kubernetes is an open-source platform for deploying and managing containers. It 
 
 To have in-depth understanding of Kubernetes Concepts refer [Kubernetes Official Documentation](https://kubernetes.io/docs/home/)
 
+**Helm** , the package manager for Kubernetes, is a useful command line tool for: installing, upgrading and managing applications on a Kubernetes cluster. Helm packages are called charts. We will be installing and managing JupyterHub on our Kubernetes cluster using a Helm chart.
+
+Charts are abstractions describing how to install packages onto a Kubernetes cluster. When a chart is deployed, it works as a templating engine to populate multiple yaml files for package dependencies with the required variables, and then runs kubectl apply to apply the configuration to the resource and install the package.
+
+
 ### DASK
 
 - Is Distributed compute scheduler built to scale  Python. Adapts to custom algorithms with a flexible task scheduler
@@ -43,11 +48,60 @@ To have in-depth understanding of Kubernetes Concepts refer [Kubernetes Official
 To have in-depth understanding of DASK Concepts refer [DASK Documentation](https://docs.dask.org/en/stable/)
 
 ### DASK Kubernetes
-Dask Kubernetes Module provides cluster managers for Kubernetes.
+Dask Kubernetes Module provides cluster managers for Kubernetes. 
 
-**KubeCluster** Module deploys Dask clusters on Kubernetes clusters using native Kubernetes APIs. It is designed to dynamically launch ad-hoc deployments.
+To have in-depth understanding of DASK Kubernetes Concepts refer [DASK Kubernetes Documentation](https://kubernetes.dask.org/en/latest/kubecluster.html).
 
-To have in-depth understanding of DASK Kubernetes Concepts refer [DASK Kubernetes Documentation](https://kubernetes.dask.org/en/latest/kubecluster.html)
+
+**KubeCluster** deploys Dask clusters on Kubernetes clusters using native Kubernetes APIs. It is designed to dynamically launch ad-hoc deployments.
+
+**HelmCluster** is for managing an existing Dask cluster which has been deployed using Helm. You must have already installed the Dask Helm chart and have the cluster running. You can then use it to manage scaling and retrieve logs.
+
+Kubernetes can be used to launch Dask workers in the following **two ways:**
+
+
+1. **Helm:**
+
+You can deploy Dask and (optionally) Jupyter or JupyterHub on Kubernetes easily using Helm
+```bash
+helm repo add dask https://helm.dask.org/    # add the Dask Helm chart repository
+helm repo update                             # get latest Helm charts
+# For single-user deployments, use dask/dask
+helm install my-dask dask/dask               # deploy standard Dask chart
+# For multi-user deployments, use dask/daskhub
+helm install my-dask dask/daskhub            # deploy JupyterHub & Dask
+```
+This is a good choice if you want to do the following:
+
+- Run a managed Dask cluster for a long period of time
+- Also deploy a Jupyter / JupyterHub server from which to run code
+- Share the same Dask cluster between many automated services
+- Try out Dask for the first time on a cloud-based system like Amazon, Google, or Microsoft Azure where you already have a Kubernetes cluster. If you don’t already have Kubernetes deployed, see our Cloud documentation.
+
+You can also use the HelmCluster cluster manager from dask-kubernetes to manage your Helm Dask cluster from within your Python session.
+```bash
+from dask_kubernetes import HelmCluster
+cluster = HelmCluster(release_name="myrelease")
+cluster.scale(10)
+```
+
+2. **Native:** You can quickly deploy Dask workers on Kubernetes from within a Python script or interactive session using Dask-Kubernetes
+
+```bash 
+from dask_kubernetes import KubeCluster
+cluster = KubeCluster.from_yaml('worker-template.yaml')
+cluster.scale(20)  # add 20 workers
+cluster.adapt()    # or create and destroy workers dynamically based on workload
+
+from dask.distributed import Client
+client = Client(cluster)
+```
+This is a good choice if you want to do the following:
+
+- Dynamically create a personal and ephemeral deployment for interactive use
+- Allow many individuals the ability to launch their own custom dask deployments, rather than depend on a centralized system
+- Quickly adapt Dask cluster size to the current workload
+
 
 ### Qiskit Aer Simulator 
 
@@ -136,7 +190,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       $sudo pip install qiskit[nature]
       $sudo pip install qiskit[visualization]
       ```
-    - Prepare Dask Worker Pod Specification YAML file for Aer Simulator.  **Note: The specification should include installation of DASK & Qiskit packages**.Refer sample [Worker Spec YAML file](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Sample%20Code/worker-spec.yml).
+    - Install the DASK  Dask Worker Pod Specification YAML file for Aer Simulator.  **Note: The specification should include installation of DASK & Qiskit packages**.Refer sample [Worker Spec YAML file](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Sample%20Code/worker-spec.yml).
     - Refer [KubeCluster](https://kubernetes.dask.org/en/latest/kubecluster.html) for other available options for defining DASK Worker/ Pod. 
     - Check Kubernetes Cluster Status:
     ```bash
