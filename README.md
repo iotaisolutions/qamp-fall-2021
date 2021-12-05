@@ -186,6 +186,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       ```
   - (Optionally) Setup a [Virtual Environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/) for Python, which enable you to have an isolated space on your server for Python projects, ensuring that each of your projects can have its own set of dependencies that won’t disrupt any of your other projects. 
   - Install **Helm** on Linux CI Host using [Helm Install Documentation](https://helm.sh/docs/intro/install)
+  - Install **METRICS** Server byY BITNAMI HELM CHARTS
   
  ### DASK Environment Preperation
   - Install **DASK Distributed & Kubernetes** Package with Python Dependencies on Linux CI host
@@ -311,9 +312,9 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       ```bash
       helm upgrade my-dask dask/dask -f config.yaml
       ```
-    This will update those containers that need to be updated. It may take a minute or so.As a reminder, the names of deployments can be listed using **helm list**.\
-  ###Testing the environment 
-    - **Running a simple DASK (non QISKIT) script** 
+    This will update those containers that need to be updated. It may take a minute or so.As a reminder, the names of deployments can be listed using **helm list**.
+  ### Testing the environment 
+  - **Running a simple DASK (non QISKIT) script** 
 
       ```bash
       #Python Script for Dask Array Mean Calculation
@@ -333,8 +334,8 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       # Create a large array and calculate the mean
       array = da.ones((1000, 1000, 1000))
       print("Array Mean", array.mean().compute())# Should print 1.0
-
-      
+      ```
+      ```bash
       ubuntu@ip-172-31-93-214:~$ python3 dask_array_mean.py
       /home/ubuntu/.local/lib/python3.8/site-packages/distributed/client.py:1131: VersionMismatchWarning: Mismatched versions found
 
@@ -350,5 +351,8 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       +---------+----------------+----------------+----------------+
         warnings.warn(version_module.VersionMismatchWarning(msg[0]["warning"]))
       Array Mean 1.0
-  
       ```
+  - **Running a VQE script generating Qiskit Circuit List**
+    - **Case 1 :** Running without parallel execution environment
+    - **Case 2 :** Running with ThreadsPool parallel execution environment
+    - **Case 3 :** Running with DASK K8s parallel execution environment   
