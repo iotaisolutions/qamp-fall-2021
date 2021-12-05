@@ -30,7 +30,7 @@ Kubernetes is an open-source platform for deploying and managing containers. It 
 
 To have in-depth understanding of Kubernetes Concepts refer [Kubernetes Official Documentation](https://kubernetes.io/docs/home/)
 
-**Helm** , the package manager for Kubernetes, is a useful command line tool for: installing, upgrading and managing applications on a Kubernetes cluster. Helm packages are called charts. We will be installing and managing JupyterHub on our Kubernetes cluster using a Helm chart.
+**Helm** is the package manager for Kubernetes, is a useful command line tool for: installing, upgrading and managing applications on a Kubernetes cluster. Helm packages are called charts. We will be installing and managing JupyterHub on our Kubernetes cluster using a Helm chart.
 
 Charts are abstractions describing how to install packages onto a Kubernetes cluster. When a chart is deployed, it works as a templating engine to populate multiple yaml files for package dependencies with the required variables, and then runs kubectl apply to apply the configuration to the resource and install the package.
 
