@@ -305,7 +305,13 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
           - name: OPENBLAS_NUM_THREADS
             value: "1"
       ```
+  - **Update deployment** : If this config file has the configuration for the number and size of workers then it overrides existing configuration and installs the conda and pip packages on the worker and Jupyter containers. In general, it is needed that these two container environments match.\
 
+    Update deployment to use this configuration file (config.yaml):
+      ```bash
+      helm upgrade my-dask dask/dask -f config.yaml
+      ```
+    This will update those containers that need to be updated. It may take a minute or so.As a reminder, the names of deployments can be listed using **helm list**.\
   ###Testing the environment 
     - **Running a simple DASK (non QISKIT) script** 
 
