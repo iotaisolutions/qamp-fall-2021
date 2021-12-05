@@ -658,10 +658,10 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       ```bash
       === GROUND STATE ENERGY ===
 
-      * Electronic ground state energy (Hartree): -8.458691734087
-        - computed part:      -8.458691734087
+      * Electronic ground state energy (Hartree): -8.458691718218
+        - computed part:      -8.458691718218
       ~ Nuclear repulsion energy (Hartree): 0.635012653104
-      > Total ground state energy (Hartree): -7.823679080983
+      > Total ground state energy (Hartree): -7.823679065114
 
       === MEASURED OBSERVABLES ===
 
@@ -672,11 +672,12 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       ~ Nuclear dipole moment (a.u.): [0.0  0.0  14.17294593]
 
         0:
-        * Electronic dipole moment (a.u.): [0.00000381  0.00000008  12.73432745]
-          - computed part:      [0.00000381  0.00000008  12.73432745]
-        > Dipole moment (a.u.): [-0.00000381  -0.00000008  1.43861848]  Total: 1.43861848
-                       (debye): [-0.00000968  -0.0000002  3.65660311]  Total: 3.65660311
+        * Electronic dipole moment (a.u.): [-0.00000148  0.00000006  12.73424271]
+          - computed part:      [-0.00000148  0.00000006  12.73424271]
+        > Dipole moment (a.u.): [0.00000148  -0.00000006  1.43870322]  Total: 1.43870322
+                       (debye): [0.00000376  -0.00000015  3.65681847]  Total: 3.65681847
 
-      Execution Time with three  Dask Cluster worker(s):  967.5445785410047
+      Execution Time with three  Dask Cluster worker(s):  950.1796383859983
+
   
       ```
