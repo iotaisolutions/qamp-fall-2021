@@ -499,7 +499,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
 
       Execution Time without Parallelism:  757.9253145660005
       ```
-    - **Case 2 : Running script with ThreadsPool parallel execution environment**
+    - **Case 2 : Running script with ThreadPoolExecutor**
       ```bash
       import numpy as np
       import multiprocessing
