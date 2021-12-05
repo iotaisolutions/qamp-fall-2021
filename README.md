@@ -223,7 +223,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       ```
   - **Configure Autoscaling for DASK worker pods at Kubernetes Cluster level, controlled by CPU utilization** 
     ```bash
-    kubectl autoscale deployment.v1.apps/my-dask-worker --min=3 --max=6 --cpu-percent=80
+    kubectl autoscale deployment.v1.apps/my-dask-worker --min=1 --max=3 --cpu-percent=80
     ```
     
 # Read more about the installation in the Metrics Server packaged by Bitnami Chart Github repository
@@ -647,5 +647,27 @@ Execution Time with ThreadPool Parallelism across 2 workers:  751.1724326850017
       Run the script and wait for 10 -20 mins for output
       
       ```bash
-      
+      === GROUND STATE ENERGY ===
+
+      * Electronic ground state energy (Hartree): -8.458691734087
+        - computed part:      -8.458691734087
+      ~ Nuclear repulsion energy (Hartree): 0.635012653104
+      > Total ground state energy (Hartree): -7.823679080983
+
+      === MEASURED OBSERVABLES ===
+
+        0:  # Particles: 4.000 S: 0.000 S^2: 0.000 M: 0.000
+
+      === DIPOLE MOMENTS ===
+
+      ~ Nuclear dipole moment (a.u.): [0.0  0.0  14.17294593]
+
+        0:
+        * Electronic dipole moment (a.u.): [0.00000381  0.00000008  12.73432745]
+          - computed part:      [0.00000381  0.00000008  12.73432745]
+        > Dipole moment (a.u.): [-0.00000381  -0.00000008  1.43861848]  Total: 1.43861848
+                       (debye): [-0.00000968  -0.0000002  3.65660311]  Total: 3.65660311
+
+      Execution Time with three  Dask Cluster worker(s):  967.5445785410047
+  
       ```
