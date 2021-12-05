@@ -223,8 +223,16 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       ```
   - **Configure Autoscaling for DASK worker pods at Kubernetes Cluster level, controlled by CPU utilization** 
     ```bash
-    kubectl autoscale deployment.v1.apps/my-dask-worker --min=1 --max=3 --cpu-percent=80
+    ubuntu@ip-172-31-93-214:~$ kubectl autoscale deployment.v1.apps/my-dask-worker --min=1 --max=3 --cpu-percent=80
+    horizontal podautoscaler.autoscaling/my-dask-worker autoscaled
     ```
+    Verify horizontal pod autoscalar configuration: 
+    ```bash
+    ubuntu@ip-172-31-93-214:~$ kubectl get hpa
+    NAME             REFERENCE                   TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
+    my-dask-worker   Deployment/my-dask-worker   36%/80%   1         3         3          15s
+    ```
+
     Read more about the installation in the Metrics Server packaged by Bitnami Chart Github repository
   
  ### DASK Environment Preperation
