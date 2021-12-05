@@ -193,7 +193,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       ```
     After few minutes metric server pod will be visible in kubectl output:
       ```bash
-      ubuntu@ip-172-31-93-214:~$ kubectl get pods|grep metric
+      $ kubectl get pods|grep metric
       my-release-metrics-server-5648756f55-fldqx   1/1     Running   0          6h9m
       ```
   - Get the Kubernetes Specification for workers related to deployment 
@@ -223,12 +223,12 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       ```
   - **Configure Autoscaling for DASK worker pods at Kubernetes Cluster level, controlled by CPU utilization** 
     ```bash
-    ubuntu@ip-172-31-93-214:~$ kubectl autoscale deployment.v1.apps/my-dask-worker --min=1 --max=3 --cpu-percent=80
+    $ kubectl autoscale deployment.v1.apps/my-dask-worker --min=1 --max=3 --cpu-percent=80
     horizontal podautoscaler.autoscaling/my-dask-worker autoscaled
     ```
     Verify horizontal pod autoscalar configuration: 
     ```bash
-    ubuntu@ip-172-31-93-214:~$ kubectl get hpa
+    $ kubectl get hpa
     NAME             REFERENCE                   TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
     my-dask-worker   Deployment/my-dask-worker   36%/80%   1         3         3          15s
     ```
@@ -253,12 +253,12 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       ```
   - Dask maintains a Helm chart repository containing various charts for the Dask community https://helm.dask.org/ . Add this to your known channels and update your local charts:
       ```bash
-      helm repo add dask https://helm.dask.org/
-      helm repo update
+      $helm repo add dask https://helm.dask.org/
+      $helm repo update
       ```
   - Check Kubernetes Cluster Status:
       ```bash
-      ubuntu@ip-172-31-93-214:~$ kubectl get nodes
+      $ kubectl get nodes
       NAME                            STATUS   ROLES                  AGE   VERSION
       ip-172-20-33-106.ec2.internal   Ready    node                   24d   v1.22.2
       ip-172-20-51-193.ec2.internal   Ready    node                   24d   v1.22.2
@@ -267,12 +267,12 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
      
   - Once your Kubernetes cluster is ready, deploy **Single-user** dask deployment using the Dask Helm chart, which has one notebook server and one Dask Cluster:
       ```bash
-      helm install my-dask dask/dask # Replace helm release name as per your environment
+      $helm install my-dask dask/dask # Replace helm release name as per your environment
       ```
     This deploys a dask-scheduler, several (=3) dask-worker processes, and also an optional Jupyter server.
   - **Verify Deployment** : It might take a minute to deploy, one or more pods will be visible in either a state like Init or Running. Check deplyment its status with kubectl:
       ```bash
-      ubuntu@ip-172-31-93-214:~$ kubectl get pods |grep dask
+      $ kubectl get pods |grep dask
       my-dask-jupyter-54ddbfdd9d-psrlh             1/1     Running   0          2m23s
       my-dask-scheduler-7f4f94bb7d-vd5sb           1/1     Running   0          2m23s
       my-dask-worker-6877d8f79f-2kxkk              1/1     Running   0          2m23s
@@ -281,7 +281,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       my-dask-worker-6877d8f79f-zl54c              1/1     Running   0          116s
 
 
-      ubuntu@ip-172-31-93-214:~$ kubectl get services|grep dask
+      $ kubectl get services|grep dask
       dask-ubuntu-1e61eab2-a      ClusterIP   100.68.40.175    <none>        8786/TCP,8787/TCP   28d
       dask-ubuntu-86f19230-5      ClusterIP   100.68.54.85     <none>        8786/TCP,8787/TCP   45h
       dask-ubuntu-b71bdf3d-9      ClusterIP   100.69.173.29    <none>        8786/TCP,8787/TCP   45h
@@ -289,7 +289,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       my-dask-jupyter             ClusterIP   100.70.215.20    <none>        80/TCP              3m17s
       my-dask-scheduler           ClusterIP   100.71.64.151    <none>        8786/TCP,80/TCP     3m17s
       
-      ubuntu@ip-172-31-93-214:~$ kubectl get deployments|grep dask
+      $ kubectl get deployments|grep dask
       my-dask-jupyter             1/1     1            1           12m
       my-dask-scheduler           1/1     1            1           12m
       my-dask-worker              3/3     3            3           12m
@@ -298,10 +298,10 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
 
     If Kubernetes cluster on an in house **server/minikube** change serviceType to **NodePort**
       ```bash 
-      kubectl delete services my-dask-scheduler # Delete the service entry for dask scheduler
+      $kubectl delete services my-dask-scheduler # Delete the service entry for dask scheduler
       ##Output
       service "my-dask-scheduler" deleted
-      ubuntu@ip-172-31-93-214:~$ kubectl expose deployment my-dask-scheduler --type=NodePort  --name=my-dask-scheduler
+      $ kubectl expose deployment my-dask-scheduler --type=NodePort  --name=my-dask-scheduler
       ##Output
       service/my-dask-scheduler exposed
       ```
@@ -314,7 +314,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       ##Output
       service/my-dask-scheduler exposed
       ###Wait for few minutes (depending on response from backend Cloud platform) and again check the kubernetes services status
-      ubuntu@ip-172-31-93-214:~$ kubectl get services|grep dask
+      $ kubectl get services|grep dask
       dask-ubuntu-1e61eab2-a      ClusterIP      100.68.40.175    <none>                                                                    8786/TCP,8787/TCP               28d
       dask-ubuntu-86f19230-5      ClusterIP      100.68.54.85     <none>                                                                    8786/TCP,8787/TCP               46h
       dask-ubuntu-b71bdf3d-9      ClusterIP      100.69.173.29    <none>                                                                    8786/TCP,8787/TCP               45h
@@ -392,7 +392,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       print("Array Mean", array.mean().compute())# Should print 1.0
       ```
       ```bash
-      ubuntu@ip-172-31-93-214:~$ python3 dask_array_mean.py
+      $ python3 dask_array_mean.py
       /home/ubuntu/.local/lib/python3.8/site-packages/distributed/client.py:1131: VersionMismatchWarning: Mismatched versions found
 
       +---------+----------------+----------------+----------------+
