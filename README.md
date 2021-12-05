@@ -186,7 +186,47 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       ```
   - (Optionally) Setup a [Virtual Environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/) for Python, which enable you to have an isolated space on your server for Python projects, ensuring that each of your projects can have its own set of dependencies that won’t disrupt any of your other projects. 
   - Install **Helm** on Linux CI Host using [Helm Install Documentation](https://helm.sh/docs/intro/install)
-  - Install **METRICS** Server byY BITNAMI HELM CHARTS
+  - Install **METRICS** Server by HELM CHARTS
+      ```bash
+      $helm repo add bitnami https://charts.bitnami.com/bitnami
+      $helm install my-release bitnami/metrics-server
+      ```
+    After few minutes metric server pod will be visible in kubectl output:
+      ```bash
+      ubuntu@ip-172-31-93-214:~$ kubectl get pods|grep metric
+      my-release-metrics-server-5648756f55-fldqx   1/1     Running   0          6h9m
+      ```
+  - Get the Kubernetes Specification for workers related to deployment 
+     ```bash
+      $helm get all my-dask
+      ##Output (Not full des
+      # Source: dask/templates/dask-worker-deployment.yaml
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: my-dask-worker
+        labels:
+          app: dask
+          heritage: "Helm"
+          release: "my-dask"
+          chart: dask-2021.11.2
+          component: worker
+      spec:
+        replicas: 3
+        selector:
+          matchLabels:
+            app: dask
+            release: "my-dask"
+            component: worker
+
+      .......
+      ```
+  - **Configure Autoscaling for DASK worker pods at Kubernetes Cluster level, controlled by CPU utilization** 
+    ```bash
+    kubectl autoscale deployment.v1.apps/my-dask-worker --min=3 --max=6 --cpu-percent=80
+    ```
+    
+# Read more about the installation in the Metrics Server packaged by Bitnami Chart Github repository
   
  ### DASK Environment Preperation
   - Install **DASK Distributed & Kubernetes** Package with Python Dependencies on Linux CI host
@@ -252,13 +292,20 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
     If Kubernetes cluster on an in house **server/minikube** change serviceType to **NodePort**
       ```bash 
       kubectl delete services my-dask-scheduler # Delete the service entry for dask scheduler
+      ##Output
+      service "my-dask-scheduler" deleted
       ubuntu@ip-172-31-93-214:~$ kubectl expose deployment my-dask-scheduler --type=NodePort  --name=my-dask-scheduler
+      ##Output
       service/my-dask-scheduler exposed
       ```
     If Kubernetes Environment is on **Cloud platform**, change serviceType  **LoadBalancer**
       ```bash
-      kubectl delete services my-dask-scheduler # Delete the service entry for dask scheduler
-      ubuntu@ip-172-31-93-214:~$ kubectl expose deployment my-dask-scheduler --type=LoadBalancer  --name=my-dask-scheduler
+      $kubectl delete services my-dask-scheduler # Delete the service entry for dask scheduler
+      ##Output
+      service "my-dask-scheduler" deleted
+      $kubectl expose deployment my-dask-scheduler --type=LoadBalancer  --name=my-dask-scheduler
+      ##Output
+      service/my-dask-scheduler exposed
       ###Wait for few minutes (depending on response from backend Cloud platform) and again check the kubernetes services status
       ubuntu@ip-172-31-93-214:~$ kubectl get services|grep dask
       dask-ubuntu-1e61eab2-a      ClusterIP      100.68.40.175    <none>                                                                    8786/TCP,8787/TCP               28d
@@ -314,7 +361,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       ```
     This will update those containers that need to be updated. It may take a minute or so.As a reminder, the names of deployments can be listed using **helm list**.
   ### Testing the environment 
-  - **Running a simple DASK (non QISKIT) script**(Considering K8s on Cloud Platform)  
+  - **Running a simple DASK (non QISKIT) script, considering K8s on Cloud Platform**  
 
       ```bash
       #Python Script for Dask Array Mean Calculation
@@ -353,7 +400,8 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       Array Mean 1.0
       ```
   - **Running a VQE script generating Qiskit Circuit List**
-    - **Case 1 :** Running script without parallel execution environment
+  
+    - **Case 1 : Running script without parallel execution environment**
     
       ```bash
       # VQE Script generating Circuit list
@@ -440,9 +488,9 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
         > Dipole moment (a.u.): [-0.00000183  -0.00000491  1.43870795]  Total: 1.43870795
                        (debye): [-0.00000466  -0.00001247  3.6568305]  Total: 3.6568305
 
-      **Execution Time without Parallelism:  757.9253145660005**
+      Execution Time without Parallelism:  757.9253145660005
       ```
-    - **Case 2 :** Running script with ThreadsPool parallel execution environment
+    - **Case 2 : Running script with ThreadsPool parallel execution environment**
       ```bash
       import numpy as np
       import multiprocessing
@@ -481,10 +529,10 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
 
       from qiskit_nature.algorithms import VQEUCCFactory
 
-      **from concurrent.futures import ThreadPoolExecutor
+      from concurrent.futures import ThreadPoolExecutor
       exc = ThreadPoolExecutor(max_workers=2)
 
-      simulator = AerSimulator(executor=exc)**
+      simulator = AerSimulator(executor=exc)
       quantum_instance = QuantumInstance(backend=simulator)
 
       start = timeit.default_timer()
@@ -502,10 +550,34 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       stop = timeit.default_timer()
       print('Execution Time with ThreadPool Parallelism across 2 workers: ', stop - start)
       ```
-      ```bash
+      Run the script and wait for 10 -20 mins for output
       
+      ```bash
+      === GROUND STATE ENERGY ===
+
+* Electronic ground state energy (Hartree): -8.458691732867
+  - computed part:      -8.458691732867
+~ Nuclear repulsion energy (Hartree): 0.635012653104
+> Total ground state energy (Hartree): -7.823679079763
+
+=== MEASURED OBSERVABLES ===
+
+  0:  # Particles: 4.000 S: 0.000 S^2: 0.000 M: 0.000
+
+=== DIPOLE MOMENTS ===
+
+~ Nuclear dipole moment (a.u.): [0.0  0.0  14.17294593]
+
+  0:
+  * Electronic dipole moment (a.u.): [-0.00000109  0.00000622  12.73426887]
+    - computed part:      [-0.00000109  0.00000622  12.73426887]
+  > Dipole moment (a.u.): [0.00000109  -0.00000622  1.43867706]  Total: 1.43867706
+                 (debye): [0.00000277  -0.00001581  3.656752]  Total: 3.656752
+
+Execution Time with ThreadPool Parallelism across 2 workers:  751.1724326850017
+
       ```
-    - **Case 3 :** Running script with DASK K8s parallel execution environment (Considering K8s on Cloud Platform)    
+    - **Case 3 : Running script with DASK K8s parallel execution environment on Cloud Platform**    
       ```bash
       import numpy as np
       import multiprocessing
@@ -547,10 +619,10 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
                               level=logging.DEBUG,
                               datefmt='%Y-%m-%d %H:%M:%S')
 
-**          from dask.distributed import Client
+          from dask.distributed import Client
           exc =  Client(address="tcp://xxx4e66d7fxxx47858xx1c1cd4c13c19-1533367445.us-east-1.elb.amazonaws.com:8786")# External IP captured in kubectl get services output
           simulator = AerSimulator()
-          simulator.set_options(executor=exc)**
+          simulator.set_options(executor=exc)
           simulator.set_options(max_job_size=1)
 
           quantum_instance = QuantumInstance(backend=simulator)
@@ -572,6 +644,8 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
           q_exec()
 
       ```
+      Run the script and wait for 10 -20 mins for output
+      
       ```bash
       
       ```
