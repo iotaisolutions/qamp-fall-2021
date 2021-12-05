@@ -189,10 +189,10 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
   
  ###DASK Environment Preperation
     - Install **DASK Distributed & Kubernetes** Package with Python Dependencies on Linux CI host
-       ```bash
-       $sudo pip install dask distributed --upgrade # A distributed task scheduler for Dask
-       $sudo pip install dask-kubernetes --upgrade  # DASK Kubernetes Module 
-       ```
+      ```bash
+      $sudo pip install dask distributed --upgrade # A distributed task scheduler for Dask
+      $sudo pip install dask-kubernetes --upgrade  # DASK Kubernetes Module 
+      ```
        For other installation options refer [DASK Distributed Documentation](http://distributed.dask.org/en/stable/install.html) & [DASK Kubernetes Documentation](https://kubernetes.dask.org/en/latest/installing.html) 
     - Install Qiskit SDK package(s) 
       On Linux CI host **preferably in Python Virtual Environment** 
@@ -294,7 +294,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
           - name: OPENBLAS_NUM_THREADS
             value: "1"
 
-      # We want to keep the same packages on the worker and jupyter environments
+      # Need to keep the same packages on the worker and jupyter environments
       jupyter:
         env:
           - name: EXTRA_PIP_PACKAGES
@@ -308,7 +308,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       ```
 
 ###Testing the environment 
-- Running a simple DASK (non QISKIT) script** 
+- **Running a simple DASK (non QISKIT) script** 
 
       ```bash
       #Python Script for Dask Array Mean Calculation
