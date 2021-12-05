@@ -117,7 +117,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
  Ubuntu Instance with **2vCPU and 4GB RAM** ![Ubuntu](https://thumbor.forbes.com/thumbor/fit-in/1200x0/filters%3Aformat%28jpg%29/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F5ec418c2ac01e2000762cfdd%2F0x0.jpg )| Python >= Version 3.8![Python](https://miro.medium.com/max/1400/0*BjcKs4_BdpYCiybp.png)  |  Qiskit >= Version 0.30.0 & AER Simulator > Version 0.10.0  ![Qiskit](https://img.shields.io/badge/Qiskit%200.30-%236929C4.svg?style=for-the-badge&logo=Qiskit&logoColor=white)| Kubernetes >= Version 19.15 ![Kubernetes](https://www.pngitem.com/pimgs/m/3-31510_svg-kubernetes-logo-hd-png-download.png) | Dask-kubernetes >= Version 2021.10.0 ![HPC Cluster Platform](https://user-images.githubusercontent.com/68344826/143777777-1dc83d72-256f-4f60-b329-356167f037a1.png)| ![Jupyter Notebook](https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Jupyter_logo.svg/1200px-Jupyter_logo.svg.png) |![AWS Cloud](https://www.techrepublic.com/a/hub/i/r/2016/08/03/78fd9253-5cce-47e0-8961-77460e957405/thumbnail/770x578/30e06bd910bad09134f56e3ee490f4ef/icon-cloud-aws.png)
  
  ## Step by Step Guide for Setup of Clustered Backend Environment for AER Simulator
- ###Setup Kubernetes Environment
+ ### Setup Kubernetes Environment
   - Install a compatible Linux CI host (Preferably based on Debian and Red Hat), with at least 2 CPU and 4 GB RAM.
   - SSH to Linux CI host
   - Choose a cluster name:
@@ -187,29 +187,28 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
   - (Optionally) Setup a [Virtual Environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/) for Python, which enable you to have an isolated space on your server for Python projects, ensuring that each of your projects can have its own set of dependencies that won’t disrupt any of your other projects. 
   - Install **Helm** on Linux CI Host using [Helm Install Documentation](https://helm.sh/docs/intro/install)
   
- ###DASK Environment Preperation
-    - Install **DASK Distributed & Kubernetes** Package with Python Dependencies on Linux CI host
+ ### DASK Environment Preperation
+  - Install **DASK Distributed & Kubernetes** Package with Python Dependencies on Linux CI host
       ```bash
       $sudo pip install dask distributed --upgrade # A distributed task scheduler for Dask
       $sudo pip install dask-kubernetes --upgrade  # DASK Kubernetes Module 
       ```
-       For other installation options refer [DASK Distributed Documentation](http://distributed.dask.org/en/stable/install.html) & [DASK Kubernetes Documentation](https://kubernetes.dask.org/en/latest/installing.html) 
-    - Install Qiskit SDK package(s) 
-      On Linux CI host **preferably in Python Virtual Environment** 
+    For other installation options refer [DASK Distributed Documentation](http://distributed.dask.org/en/stable/install.html) & [DASK Kubernetes Documentation](https://kubernetes.dask.org/en/latest/installing.html) 
+  - Install Qiskit SDK package(s) on Linux CI host **preferably in Python Virtual Environment** 
       ```bash
       $sudo pip install qiskit
       ```
-      Optionally install Application Modules & Visualization functionality (like Plots , Jupyter Notebooks), as per requirement of program, e.g **Qiskit Nature ( for VQE )**
+    Optionally install Application Modules & Visualization functionality (like Plots , Jupyter Notebooks), as per requirement of program, e.g **Qiskit Nature ( for VQE )**
       ```bash
       $sudo pip install qiskit[nature]
       $sudo pip install qiskit[visualization]
       ```
-    - Dask maintains a Helm chart repository containing various charts for the Dask community https://helm.dask.org/ . Add this to your known channels and update your local charts:
+  - Dask maintains a Helm chart repository containing various charts for the Dask community https://helm.dask.org/ . Add this to your known channels and update your local charts:
       ```bash
       helm repo add dask https://helm.dask.org/
       helm repo update
       ```
-    - Check Kubernetes Cluster Status:
+  - Check Kubernetes Cluster Status:
       ```bash
       ubuntu@ip-172-31-93-214:~$ kubectl get nodes
       NAME                            STATUS   ROLES                  AGE   VERSION
@@ -218,12 +217,12 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       ip-172-20-61-190.ec2.internal   Ready    control-plane,master   24d   v1.22.2
       ```  
      
-    - Once your Kubernetes cluster is ready, deploy **Single-user** dask deployment using the Dask Helm chart, which has one notebook server and one Dask Cluster:
+  - Once your Kubernetes cluster is ready, deploy **Single-user** dask deployment using the Dask Helm chart, which has one notebook server and one Dask Cluster:
       ```bash
       helm install my-dask dask/dask # Replace helm release name as per your environment
       ```
-      This deploys a dask-scheduler, several (=3) dask-worker processes, and also an optional Jupyter server.
-     - **Verify Deployment** : It might take a minute to deploy, one or more pods will be visible in either a state like Init or Running. Check deplyment its status with kubectl:
+    This deploys a dask-scheduler, several (=3) dask-worker processes, and also an optional Jupyter server.
+  - **Verify Deployment** : It might take a minute to deploy, one or more pods will be visible in either a state like Init or Running. Check deplyment its status with kubectl:
       ```bash
       ubuntu@ip-172-31-93-214:~$ kubectl get pods |grep dask
       my-dask-jupyter-54ddbfdd9d-psrlh             1/1     Running   0          2m23s
@@ -247,15 +246,15 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       my-dask-scheduler           1/1     1            1           12m
       my-dask-worker              3/3     3            3           12m
       ```
-    - (Optional) Kubernetes cluster has default **serviceType** already set as **ClusterIP**
+  - (Optional) Kubernetes cluster has default **serviceType** already set as **ClusterIP**
 
-      If Kubernetes cluster on an in house **server/minikube** change serviceType to **NodePort**
+    If Kubernetes cluster on an in house **server/minikube** change serviceType to **NodePort**
       ```bash 
       kubectl delete services my-dask-scheduler # Delete the service entry for dask scheduler
       ubuntu@ip-172-31-93-214:~$ kubectl expose deployment my-dask-scheduler --type=NodePort  --name=my-dask-scheduler
       service/my-dask-scheduler exposed
       ```
-     If Kubernetes Environment is on **Cloud platform**, change serviceType  **LoadBalancer**
+    If Kubernetes Environment is on **Cloud platform**, change serviceType  **LoadBalancer**
       ```bash
       kubectl delete services my-dask-scheduler # Delete the service entry for dask scheduler
       ubuntu@ip-172-31-93-214:~$ kubectl expose deployment my-dask-scheduler --type=LoadBalancer  --name=my-dask-scheduler
@@ -269,16 +268,16 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       my-dask-scheduler           LoadBalancer   100.66.41.63     xxx4e66d7fxxx47858xx1c1cd4c13c19-1533367445.us-east-1.elb.amazonaws.com   8786:31305/TCP,8787:31970/TCP   4m19s
 
       ```
-      When we ran kubectl get services, some externally IP is visible (like **xxx4e66d7fxxx47858xx1c1cd4c13c19-1533367445.us-east-1.elb.amazonaws.com**) against dask scheduler services, using any web browser (http://xxx4e66d7fxxx47858xx1c1cd4c13c19-1533367445.us-east-1.elb.amazonaws.com:8787/workers) the Dask diagnostic dashboard can be accessed. 
+    When we ran kubectl get services, some externally IP is visible (like **xxx4e66d7fxxx47858xx1c1cd4c13c19-1533367445.us-east-1.elb.amazonaws.com**) against dask scheduler services, using any web browser (http://xxx4e66d7fxxx47858xx1c1cd4c13c19-1533367445.us-east-1.elb.amazonaws.com:8787/workers) the Dask diagnostic dashboard can be accessed. 
       
-    - **Configure DASK Environment as Executor for Qiskit AER Simulator** : By default, the Helm deployment launches three workers using one core each and a standard conda environment. To act as a **executor** for Qiskit AER simulator, need to create a small yaml file that customizes environment by:
-     - Setting variables on worker nodes: **OMP_NUM_THREAD, MKL_NUM_THREADS, OPENBLAS_NUM_THREADS**  
-       **Note:** These environment variable controls the number of threads that many libraries, including the BLAS library powering numpy.dot, use in their computations, like matrix multiply.The conflict here is that two parallel libraries that are calling each other, BLAS, and dask.distributed. Each library is designed to use as many threads as there are logical cores available in the system. 
+  - **Configure DASK Environment as Executor for Qiskit AER Simulator** : By default, the Helm deployment launches three workers using one core each and a standard conda environment. To act as a **executor** for Qiskit AER simulator, need to create a small yaml file that customizes environment by:
+    - Setting variables on worker nodes: **OMP_NUM_THREAD, MKL_NUM_THREADS, OPENBLAS_NUM_THREADS**  
+      **Note:** These environment variable controls the number of threads that many libraries, including the BLAS library powering numpy.dot, use in their computations, like matrix multiply.The conflict here is that two parallel libraries that are calling each other, BLAS, and dask.distributed. Each library is designed to use as many threads as there are logical cores available in the system. 
 
-       For example if compute platform had eight cores then dask.distributed might run function **f** eight times at once on different threads. The **numpy.dot** function call within **f** would use eight threads per call, resulting in 64 threads running at once.This is actually fine, but it will be slower than scenario if where just eight threads are used at a time, either by limiting dask.distributed or by limiting BLAS.
+      For example if compute platform had eight cores then dask.distributed might run function **f** eight times at once on different threads. The **numpy.dot** function call within **f** would use eight threads per call, resulting in 64 threads running at once.This is actually fine, but it will be slower than scenario if where just eight threads are used at a time, either by limiting dask.distributed or by limiting BLAS.
 
 
-     - Installing **qiskit** package on worker pods.
+    - Installing **qiskit** package on worker pods.
 
       ```bash
       # config.yaml
@@ -307,8 +306,8 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
             value: "1"
       ```
 
-###Testing the environment 
-- **Running a simple DASK (non QISKIT) script** 
+  ###Testing the environment 
+    - **Running a simple DASK (non QISKIT) script** 
 
       ```bash
       #Python Script for Dask Array Mean Calculation
