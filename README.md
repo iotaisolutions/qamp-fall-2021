@@ -314,7 +314,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       ```
     This will update those containers that need to be updated. It may take a minute or so.As a reminder, the names of deployments can be listed using **helm list**.
   ### Testing the environment 
-  - **Running a simple DASK (non QISKIT) script** 
+  - **Running a simple DASK (non QISKIT) script**(Considering K8s on Cloud Platform)  
 
       ```bash
       #Python Script for Dask Array Mean Calculation
@@ -322,7 +322,7 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       from dask.distributed import Client
 
       # Connect Dask to the cluster
-      client = Client("tcp://a9164e66d7f6a47858ab1c1cd4c13c19-1533367445.us-east-1.elb.amazonaws.com:8786")
+      client = Client("tcp://xxx4e66d7fxxx47858xx1c1cd4c13c19-1533367445.us-east-1.elb.amazonaws.com:8786") # External IP captured in kubectl get services output
 
 
       import time
@@ -353,6 +353,225 @@ Operating System Platform| Programming Language| Quantum Compluting Development 
       Array Mean 1.0
       ```
   - **Running a VQE script generating Qiskit Circuit List**
-    - **Case 1 :** Running without parallel execution environment
-    - **Case 2 :** Running with ThreadsPool parallel execution environment
-    - **Case 3 :** Running with DASK K8s parallel execution environment   
+    - **Case 1 :** Running script without parallel execution environment
+    
+      ```bash
+      # VQE Script generating Circuit list
+      import numpy as np
+      import multiprocessing
+      from time import time
+      import timeit
+      from qiskit_nature.circuit.library import HartreeFock, UCCSD
+      from qiskit_nature.converters.second_quantization import QubitConverter
+      from qiskit_nature.drivers import UnitsType, Molecule
+      from qiskit_nature.drivers.second_quantization.pyscfd import PySCFDriver
+      from qiskit_nature.mappers.second_quantization import JordanWignerMapper, ParityMapper
+      from qiskit_nature.problems.second_quantization import ElectronicStructureProblem
+      from qiskit_nature.algorithms import GroundStateEigensolver
+      import warnings
+      warnings.filterwarnings("ignore")
+
+      mol_string='H .0 .0 .0; Li .0 .0 2.5'
+
+      threads = 12
+      max_evals_grouped = 1024
+
+      driver = PySCFDriver(atom=mol_string, unit=UnitsType.ANGSTROM, basis='sto3g')
+      es_problem = ElectronicStructureProblem(driver)
+      qubit_converter = QubitConverter(JordanWignerMapper())
+
+      from qiskit.algorithms.optimizers import SLSQP
+      optimizer = SLSQP(maxiter=5000)
+
+      from qiskit.providers.aer import AerSimulator
+      from qiskit.utils import QuantumInstance
+
+
+      import logging
+      logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s',
+                          level=logging.DEBUG,
+                          datefmt='%Y-%m-%d %H:%M:%S')
+
+      from qiskit_nature.algorithms import VQEUCCFactory
+
+      simulator = AerSimulator()
+      quantum_instance = QuantumInstance(backend=simulator)
+
+      start = timeit.default_timer()
+
+
+      vqe_solver = VQEUCCFactory(quantum_instance,
+                                 optimizer=optimizer,
+                                 include_custom=True)
+
+      optimizer.set_max_evals_grouped(max_evals_grouped)
+
+      calc = GroundStateEigensolver(qubit_converter, vqe_solver)
+      res = calc.solve(es_problem)
+
+      print(res)
+
+      stop = timeit.default_timer()
+
+      print('Execution Time without Parallelism: ', stop - start)
+
+      ```
+      Run the script and wait for 10 -20 mins for output
+      
+      ```bash
+      === GROUND STATE ENERGY ===
+
+      * Electronic ground state energy (Hartree): -8.458691725491
+        - computed part:      -8.458691725491
+      ~ Nuclear repulsion energy (Hartree): 0.635012653104
+      > Total ground state energy (Hartree): -7.823679072387
+
+      === MEASURED OBSERVABLES ===
+
+        0:  # Particles: 4.000 S: 0.000 S^2: 0.000 M: 0.000
+
+      === DIPOLE MOMENTS ===
+
+      ~ Nuclear dipole moment (a.u.): [0.0  0.0  14.17294593]
+
+        0:
+        * Electronic dipole moment (a.u.): [0.00000183  0.00000491  12.73423798]
+          - computed part:      [0.00000183  0.00000491  12.73423798]
+        > Dipole moment (a.u.): [-0.00000183  -0.00000491  1.43870795]  Total: 1.43870795
+                       (debye): [-0.00000466  -0.00001247  3.6568305]  Total: 3.6568305
+
+      **Execution Time without Parallelism:  757.9253145660005**
+      ```
+    - **Case 2 :** Running script with ThreadsPool parallel execution environment
+      ```bash
+      import numpy as np
+      import multiprocessing
+      from time import time
+      import timeit
+      from qiskit_nature.circuit.library import HartreeFock, UCCSD
+      from qiskit_nature.converters.second_quantization import QubitConverter
+      from qiskit_nature.drivers import UnitsType, Molecule
+      from qiskit_nature.drivers.second_quantization.pyscfd import PySCFDriver
+      from qiskit_nature.mappers.second_quantization import JordanWignerMapper, ParityMapper
+      from qiskit_nature.problems.second_quantization import ElectronicStructureProblem
+      from qiskit_nature.algorithms import GroundStateEigensolver
+      import warnings
+      warnings.filterwarnings("ignore")
+
+      mol_string='H .0 .0 .0; Li .0 .0 2.5'
+
+      threads = 12
+      max_evals_grouped = 1024
+
+      driver = PySCFDriver(atom=mol_string, unit=UnitsType.ANGSTROM, basis='sto3g')
+      es_problem = ElectronicStructureProblem(driver)
+      qubit_converter = QubitConverter(JordanWignerMapper())
+
+      from qiskit.algorithms.optimizers import SLSQP
+      optimizer = SLSQP(maxiter=5000)
+
+      from qiskit.providers.aer import AerSimulator
+      from qiskit.utils import QuantumInstance
+
+
+      import logging
+      logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s',
+                          level=logging.DEBUG,
+                          datefmt='%Y-%m-%d %H:%M:%S')
+
+      from qiskit_nature.algorithms import VQEUCCFactory
+
+      **from concurrent.futures import ThreadPoolExecutor
+      exc = ThreadPoolExecutor(max_workers=2)
+
+      simulator = AerSimulator(executor=exc)**
+      quantum_instance = QuantumInstance(backend=simulator)
+
+      start = timeit.default_timer()
+      simulator = AerSimulator(executor=exc)
+      quantum_instance = QuantumInstance(backend=simulator)
+      start = timeit.default_timer()
+      vqe_solver = VQEUCCFactory(quantum_instance,
+                                 optimizer=optimizer,
+                                 include_custom=True)
+
+      optimizer.set_max_evals_grouped(max_evals_grouped)
+      calc = GroundStateEigensolver(qubit_converter, vqe_solver)
+      res = calc.solve(es_problem)
+      print(res)
+      stop = timeit.default_timer()
+      print('Execution Time with ThreadPool Parallelism across 2 workers: ', stop - start)
+      ```
+      ```bash
+      
+      ```
+    - **Case 3 :** Running script with DASK K8s parallel execution environment (Considering K8s on Cloud Platform)    
+      ```bash
+      import numpy as np
+      import multiprocessing
+      from time import time
+      import timeit
+      from qiskit_nature.circuit.library import HartreeFock, UCCSD
+      from qiskit_nature.converters.second_quantization import QubitConverter
+      from qiskit_nature.drivers import UnitsType, Molecule
+      from qiskit_nature.drivers.second_quantization.pyscfd import PySCFDriver
+      from qiskit_nature.mappers.second_quantization import JordanWignerMapper, ParityMapper
+      from qiskit_nature.problems.second_quantization import ElectronicStructureProblem
+      from qiskit_nature.algorithms import GroundStateEigensolver
+      from qiskit.algorithms.optimizers import SLSQP
+      from qiskit.providers.aer import AerSimulator
+      from qiskit.utils import QuantumInstance
+      from qiskit_nature.algorithms import VQEUCCFactory
+      from distributed import LocalCluster
+      from dask.distributed import Client
+      import logging
+
+      def q_exec():
+          import warnings
+          warnings.filterwarnings("ignore")
+
+          mol_string='H .0 .0 .0; Li .0 .0 2.5'
+
+          threads = 12
+          max_evals_grouped = 1024
+
+          driver = PySCFDriver(atom=mol_string, unit=UnitsType.ANGSTROM, basis='sto3g')
+          es_problem = ElectronicStructureProblem(driver)
+          qubit_converter = QubitConverter(JordanWignerMapper())
+
+
+          optimizer = SLSQP(maxiter=5000)
+
+
+          logging.basicConfig(format='%(asctime)s %(levelname)-8s %(message)s',
+                              level=logging.DEBUG,
+                              datefmt='%Y-%m-%d %H:%M:%S')
+
+**          from dask.distributed import Client
+          exc =  Client(address="tcp://xxx4e66d7fxxx47858xx1c1cd4c13c19-1533367445.us-east-1.elb.amazonaws.com:8786")# External IP captured in kubectl get services output
+          simulator = AerSimulator()
+          simulator.set_options(executor=exc)**
+          simulator.set_options(max_job_size=1)
+
+          quantum_instance = QuantumInstance(backend=simulator)
+          start = timeit.default_timer()
+
+          vqe_solver = VQEUCCFactory(quantum_instance,
+                                     optimizer=optimizer,
+                                     include_custom=True)
+
+          optimizer.set_max_evals_grouped(max_evals_grouped)
+
+          calc = GroundStateEigensolver(qubit_converter, vqe_solver)
+          res =  calc.solve(es_problem)
+          print(res)
+          stop = timeit.default_timer()
+          print('Execution Time with three  Dask Cluster worker(s): ', stop - start)
+
+      if __name__ == '__main__':
+          q_exec()
+
+      ```
+      ```bash
+      
+      ```
