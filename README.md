@@ -1,20 +1,30 @@
 ## Project 39: Tutorial to use K8S Cluster (Qiskit Advocate Mentorship Program: Fall 2021) as backend for Aer Simulator
 
-## Background
-Simulation of quantum applications like quantum chemistry, materials science, quantum biology, generates quantum systems which are much larger than computational NISQ devices, this gap can be handled by parallelizing the quantum simulation. \
-\
-**Qiskit Aer** is a Noisy quantum circuit simulator backend and runs simulation jobs on a single-worker Python multiprocessing **ThreadPool** executor so that all parallelization is handled by low-level OpenMP and CUDA code (For Multi CPU / Core & GPU environment). \
-\
-**Variational Quantum Eigensolver (VQE)** and the other compute intensive variational algorithms) already support generating circuits together for parallel gradient computation. In order to customize job-level parallel execution of multiple circuits, a custom multiprocessing executor can be specified, which controls the splitting of circuits using the executor and max_job_size backend options of Qiskit AerSimulator. \
-\
-In order  to simulate parallel execution  on premise as well as cloud  environment, dedicated compute resources might be required, but available with constraints, both on scalability and manageability.
+## Motivation
+
+Qiskit Aer contains a new option, "executor", to use a custom executor which supports Threadpool Executor and DASK clients. This option can be scaled up easily and speed up simulation with parallelization. 
+
+Using a DASK cluster with multiple container nodes on a Kubernetes environment , Aer can execute the simulation in parallel across the multiple nodes like HPC environment. Especially, the simulation time of multiple circuits and a noise simulation can much decrease based on the number of worker nodes because multiple nodes can independently run different simulations.
+
+## Problem Understanding
+
+**Scenario:** : Simulation of quantum applications like quantum chemistry, materials science, quantum biology, generates quantum systems which are much larger than computational NISQ devices, this gap can be handled by parallelizing the quantum simulation. 
+
+**Use Case:** Variational Quantum Eigensolver (VQE) and the other compute intensive variational algorithms) already support generating circuits together for parallel gradient computation. In order to customize job-level parallel execution of multiple circuits, a custom multiprocessing executor can be specified, which controls the splitting of circuits using the executor and max_job_size backend options of Qiskit AerSimulator. 
+
+**Available Solutions** :Qiskit Aer is a Noisy quantum circuit simulator backend and runs simulation jobs on a single-worker Python multiprocessing **ThreadPool** executor so that all parallelization is handled by low-level OpenMP and CUDA code (For Multi CPU / Core & GPU environment). 
+
+**Limitations:** In order  to simulate parallel execution  on premise as well as cloud  environment, dedicated compute resources might be required, but available with constraints, both on scalability and manageability.
 
 ## Solution Overview 
 
-- **Qiskit Aer** contains an option, **"executor"**, to use a custom executor which supports **Threadpool** Executor and distributed clients like **DASK (parallel computing library for Python).** This option can be scaled up easily and speed up simulation with parallelization. With DASK cluster of multiple nodes, Aer can execute the simulation in parallel across the multiple nodes like High Performance Computing (HPC) environment. Especially, the simulation time of multiple circuits and a noise simulation can much decrease based on the number of worker nodes because multiple nodes can independently run different simulations.
-- **Using Kubernetes  clusters**, DASK worker environment can be either scaled up manually, or can be scaled as the need arises by creating auto scaling rules in Kubernetes             configuration, which means DASK only need to manage scheduling across workers in Kubernetes Cluster , as work go up or down.
-- The AerSimulator supports multiple simulation methods and configurable options for each simulation method. These may be set using the appropriate kwargs during initialization.     They can also be set of updated using the **set_options()** method. Adds a new option of the backend to provide the user's executor. 
-- When user gives Dask client as executor, Aer can execute a simulation on the distributed machines like HPC clusters. When the executor is set, AerJobSet object is returned         instead of a normal AerJob object. AerJobSet divides multiple experiments in one qobj into each experiment and submits each qobj to the executor as AerJob. After       simulations,AerJobSet collects each result and combines them into one result object.
+**Suitability:** Qiskit Aer contains an option, **"executor"**, to use a custom executor which supports **Threadpool** Executor and distributed clients like **DASK (parallel computing library for Python).** This option can be scaled up easily and speed up simulation with parallelization. With DASK cluster of multiple nodes, Aer can execute the simulation in parallel across the multiple nodes like High Performance Computing (HPC) environment. Especially, the simulation time of multiple circuits and a noise simulation can much decrease based on the number of worker nodes because multiple nodes can independently run different simulations.
+
+**Scalability:** Using Kubernetes  clusters, DASK worker environment can be either scaled up manually, or can be scaled as the need arises by creating auto scaling rules in Kubernetes configuration, which means DASK only need to manage scheduling across workers in Kubernetes Cluster , as work go up or down.
+
+**Supportability:** Qiskit Aer supports multiple simulation methods and configurable options for each simulation method. These may be set using the appropriate kwargs during initialization.  They can also be set of updated using the **set_options()** method. Adds a new option of the backend to provide the user's executor. 
+
+**Serviceability:** When user gives Dask client as executor, Aer can execute a simulation on the distributed machines like HPC clusters. When the executor is set, AerJobSet object is returned  instead of a normal AerJob object. **AerJobSet** divides multiple experiments in **one qobj** into each experiment and submits each qobj to the executor as AerJob. After simulations, **AerJobSet** collects each result and combines them into one result object.
 
                                                        
 **Architecture of Clustered Backend for Aer Simulator**
@@ -43,6 +53,14 @@ Charts are abstractions describing how to install packages onto a Kubernetes clu
 - Is Extremely modular: disjoint scheduling,  compute, data transfer and out-of-core  handling
 - Parallelizes libraries like NumPy, Pandas, and Scikit-Learn
 - Suitable for applications which require a distributed, auto scaling compute environment that is completely independent of application.
+- Dask has three primary data structures:
+  - Array (modeled after NumPy)
+  - DataFrame (modeled after pandas)
+  - Bag (modeled after lists)
+  - Uses delayed and futures to perform lazy evaluation while building a  dependency graph of tasks
+  - The scheduler then executes the task graph—in sequence,  multithreaded, multiprocessed, or distributed.
+
+
 
 ![DASK Architecture](https://github.com/iotaisolutions/qamp-fall-2021/blob/main/Images/DASK%20Architecture.PNG)
 To have in-depth understanding of DASK Concepts refer [DASK Documentation](https://docs.dask.org/en/stable/)
